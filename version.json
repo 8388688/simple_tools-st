@@ -1,0 +1,43 @@
+{
+  "version_code": 20230218001,
+  "version": "4.4-beta2",
+  "downloadurl": "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip",
+  "updatecontent": {
+    "4.4-beta2": [
+      20230218001,
+      "Remove \"passed.py\"",
+      "2023-02-18",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip"
+    ],
+    "4.4-beta1": [
+      20230212001,
+      "Update \"generate_file_path\"",
+      "2023-02-12",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta1.zip"
+    ],
+    "4.4-pre2": [
+      20230203003,
+      "Add a mirror source code.",
+      "2023-02-03",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta1.zip"
+    ],
+    "4.4-pre1": [
+      20230203002,
+      "简化更新。",
+      "2023-02-03",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
+    ],
+    "4.3": [
+      20230203001,
+      "简化更新。",
+      "2023-02-03",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
+    ],
+    "4.2": [
+      20230126001,
+      "data_process 更新。",
+      "2023-01-26",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
+    ]
+  }
+}

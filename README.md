@@ -1,2 +1,110 @@
-# simple_tools-st
-simple_tools æ–°ç‰ˆæœ¬
+# simple_tools - Ò»¸öÓÃ python Ğ´µÄ¼òÒ×¹¤¾ß°ü
+
+-----
+<a id="_menu">Ë÷Òı:</id>
+
+1. [Ë÷Òı](#_menu)
+2. [¸ÅÊö](#_summary)
+3. [ÎÄ¼ş](#_projects)
+4. [ÒÀÀµµÄ²å¼ş](#_depend_on)
+5. [bug×·×Ù](#_bug_report)
+6. [ÏÂÒ»¸ö°æ±¾µÄÔ¤¸æ](#_next_version)
+7. [¸üĞÂÈÕÖ¾](#_changelog)
+8. [ÎÄ¼şÀúÊ·¼ÇÂ¼](#_file_history)
+9. [ÄãÖªµÀÂğ](#_do_you_know)
+
+-----
+<a id="_summary">¸ÅÊö</id>
+
+[»Øµ½¶¥²¿](#_menu)
+
+## ¸ÅÊö
+
+×÷Õß: 8388688
+
+version: 4.4-beta1
+
+×îºóĞŞ¸ÄÊ±¼ä£º2023-02-12
+~~(ÒÔ´ËÖ¤Ã÷ÎÒ»¹»î×Å)~~
+
+-----
+<a id="_projects">ÎÄ¼ş</id>
+
+[»Øµ½¶¥²¿](#_menu)
+
+## ÎÄ¼ş
+
+-----
+<a id="_depend_on">ÒÀÀµµÄ²å¼ş</id>
+
+[»Øµ½¶¥²¿](#_menu)
+
+## ÒÀÀµµÄ²å¼ş
+
+[TOC]
+
+* python.io
+* python.math
+* python.os
+* python.random
+* python.stat
+* python.sys
+* python.tkinter
+* python.turtle
+* python.uuid
+* . . . . . .
+
+-----
+<a id="_bug_report">bug×·×Ù</id>
+
+[»Øµ½¶¥²¿](#_menu)
+
+## bug ×·×Ù
+
+- [ ] = Î´½â¾ö
+- [x] = ÒÑ½â¾ö
+
+-----
+
+- [ ] st-000001. ºÏ²¢ simple_tools ÖĞµÄÎÄ¼ş
+- [x] st-000002. ĞŞ¸Ä simple_tools ¹¤×÷Ä¿Â¼
+- [x] st-000003. ...
+
+-----
+<a id="_next_version">ÏÂÒ»¸ö°æ±¾</id>
+
+[»Øµ½¶¥²¿](#_menu)
+
+## ÏÂÒ»¸ö°æ±¾µÄÔ¤¸æ
+
+Release-4.2:
+
+- ¸üĞÂ maths.py ÎÄ¼ş
+
+-----
+<a id="_changelog">¸üĞÂÈÕÖ¾</id>
+
+[-> ´«ËÍÃÅ <-](changelog.md)
+
+[»Øµ½¶¥²¿](#_menu)
+
+-----
+<a id="_file_history">ÎÄ¼şÀúÊ·¼ÇÂ¼</id>
+
+[»Øµ½¶¥²¿](#_menu)
+
+### ±£´æµÄÀúÊ·°æ±¾(°´ÕÕÊ±¼äË³ĞòÅÅĞò)
+
+-----
+<a id="_do_you_know">ÄãÖªµÀÂğ</id>
+
+[»Øµ½¶¥²¿](#_menu)
+
+### ÄãÖªµÀÂğ
+
+1. ÔÚ 1.6x °æ±¾Ö®Ç°, simple_tools µÄÎÄ¼şÃû½Ğ×÷ [ÖĞÎÄÃû]ËØ²Ä´ó±¾Óª, ÔÚ 2.0 °æ±¾Ö®ºó¸ÄÎª module1
+2. ÔÚ [GitHub](https://github.com/) ÉÏ, Ò²ÓĞÒ»¸öÍ¬ÃûµÄ [simple_tools](https://www.github.com/afriemann/simple_tools.git)
+   µ«ºÍÕâ¸ö simple_tools Ö®¼äÃ»ÓĞÈÎºÎ¹ØÏµ
+3. 1.6.6 ÒÔÇ°µÄ°æ±¾È«²¿Ëğ»µ, ÎŞ·¨¶ÁÈ¡¡£
+4. 2.0.1 ÒÔÇ°µÄ°æ±¾´´½¨¡¢ĞŞ¸ÄºÍ·ÃÎÊÊ±¼ä¼ä¸ôÌ«³¤, Ëğ»µÑÏÖØ, ÎŞ·¨¶ÁÈ¡¡£
+5. ÔÚ 3.x Ö®Ç°µÄ°æ±¾, ×ÔÊöÎÄ¼şµÄĞĞÊı±»¹æ¶¨²»ÄÜ³¬¹ı 270 ĞĞ, ´ËÌõÄ¿ÒÑÔÚ 2022-10-01 ±»·Ï³ı
