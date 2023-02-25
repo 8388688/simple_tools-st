@@ -2,11 +2,10 @@ import math
 import time
 from os.path import join
 
-from simple_tools.data_base import NULL, null, science_tuple
+from simple_tools.data_base import NULL, null, science_tuple, pass_
 from simple_tools.data_process import filter_
 from simple_tools.system_extend import safe_md
 from simple_tools.data_base import ST_WORK_SPACE
-from simple_tools.default import pass_
 
 __all__ = [
     'add1', 'average_generator', 'convert_system', 'is_prime',

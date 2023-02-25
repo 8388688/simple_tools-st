@@ -1,3 +1,4 @@
+import json
 from http.client import RemoteDisconnected
 from os.path import join
 from requests import get
@@ -8,9 +9,9 @@ from webbrowser import open as webbopen  # web browser open
 from simple_tools.data_base import ST_WORK_SPACE, fp, null
 from simple_tools.system_extend import delete
 
-__all__ = ['clear_module_cache', 'get_update', 'pass_']
-__version__ = '4.4-beta2'
-version_code = 202302018001
+__all__ = ['clear_module_cache', 'get_update']
+__version__ = 'Release 4.4'
+version_code = 20230225001
 
 LOG_FILE_PATH = join(ST_WORK_SPACE, 'default', 'get_update.txt', )
 log_file_entity = open(LOG_FILE_PATH, 'a')
@@ -18,7 +19,11 @@ log_file_entity.close()
 
 
 def clear_module_cache():
+    print('在清除缓存后，程序会强制退出，以避免缓存缺失带来的问题。')
+    print('准备清除缓存。')
     delete(ST_WORK_SPACE)
+    print('Complete!')
+    exit(0)
 
 
 def get_update():
@@ -30,7 +35,8 @@ def get_update():
     }
     new_info = get(r'https://raw.githubusercontent.com/8388688/simple_tools/data/version.json', headers=headers).json()
 
-    if new_info['version_code'] > version_code:
+    print(new_info, type(new_info))
+    if new_info['updatecontent'][new_info['version']][0] > version_code:
         print('有新版本可用：', new_info['version'], '（当前版本', __version__, '），更新内容：')
         for v in new_info['updatecontent']:  # 输出更新内容
             if new_info['updatecontent'][v][0] <= version_code:
@@ -38,7 +44,7 @@ def get_update():
             print('└- ' + v + '：' + new_info['updatecontent'][v][1])
         if input('自动更新？（y/n）') == 'y':
             try:
-                req = get(new_info['downloadurl'], stream=True)  # 这里需要对 url 更新
+                req = get(new_info['updatecontent'][new_info['version']][3], stream=True)  # 这里需要对 url 更新
             except ConnectionRefusedError:
                 accident_is_happen = True
                 traceback_exc = format_exc()
@@ -82,14 +88,6 @@ def get_update():
                   'Gitee: https://gitee.com/meadeyetoe/simple_tools/releases/tag/v4.4-pre1\n'
                   '蓝奏云: \n1. https://imagine-8.lanzoue.com/ie3SB0mjnlsj\n'
                   '2. https://lanzoux.com/ie3SB0mjnlsj')
-
-
-def pass_(returns=null):
-    """没用的函数
-
-    :return: returns
-    """
-    return returns
 
 
 if __name__ == '__main__':

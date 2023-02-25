@@ -485,11 +485,20 @@ def filter_(v_str, pattern=('int',), contrary=False, returns=False, auto_convert
         return cache_dict
 
 
-def search_to_str_in_list(testlist=NULL, input_object=NULL, list_tips='输入一个列表：', obj_tips='输入一个str'):
+def search_to_str_in_list(input_object=NULL, testlist=NULL, **kwargs):
+    list_tips = kwargs.get('list_tips', '输入一个列表：')
+    obj_tips = kwargs.get('obj_tips', '输入一个str')
+    recursion = kwargs.get('recursion', False)
+    insensitive_data = kwargs.get('insensitive_data', False)
     output_list = []
     cache_output_list = []
     if testlist is NULL:
         testlist = eval(input(list_tips))
+    elif recursion:
+        testlist = dimensional_list(testlist)
+    else:
+        pass
+
     if input_object is NULL:
         obj2 = input(obj_tips)
     else:
@@ -498,11 +507,17 @@ def search_to_str_in_list(testlist=NULL, input_object=NULL, list_tips='输入一
     # 因为 OPL(output_list)只是读取 testlist 的内容
     # 并且在读取完后要对 OPL 进行 resort
     for a000 in testlist:
-        if (type(obj2) in [str, list, set, dict] and obj2 in a000) or obj2 == a000:
-            cache_output_list.append(a000)
-    length1 = len(cache_output_list)
+        if type(a000) in [list, set, dict]:
+            for _ in search_to_str_in_list(obj2, a000,
+                                           recursion=recursion, list_tips=list_tips,
+                                           obj_tips=obj_tips, insensitive_data=insensitive_data):
+                cache_output_list.append(_)
+        else:
+            if ((obj2 in a000) if not insensitive_data else (str(obj2) in str(a000))) or (
+                    obj2 == a000 if not insensitive_data else (str(obj2) == str(a000))):
+                cache_output_list.append(a000 if not insensitive_data else str(a000))
     for a000 in cache_output_list:
-        if type(obj2) in [str, list, set, dict]:
+        if type(a000) in [str, ]:
             if a000 == obj2:
                 output_list.append([-1, a000])
             else:
@@ -520,8 +535,9 @@ def search_to_str_in_list(testlist=NULL, input_object=NULL, list_tips='输入一
     del output_list[::]
     for a000 in range(len(cache_output_list)):
         output_list.append(cache_output_list[a000][1])
-    print('搜索结果：', output_list)
-    del output_list, cache_output_list, length1
+    # print('搜索结果：', output_list)
+    del cache_output_list
+    return output_list
 
 
 def bl(value, sep=':', line_sign=0, lines=False, all_values=False):

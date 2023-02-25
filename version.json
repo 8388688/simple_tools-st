@@ -1,8 +1,18 @@
 {
-  "version_code": 20230218001,
-  "version": "4.4-beta2",
-  "downloadurl": "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip",
+  "version": "4.4-beta4",
   "updatecontent": {
+    "4.4-beta4": [
+      20230225001,
+      "Rewrite of search_to_str_in_list",
+      "2023-02-18",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip"
+    ],
+    "4.4-beta3": [
+      20230218001,
+      "Edited README.md",
+      "2023-02-19",
+      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip"
+    ],
     "4.4-beta2": [
       20230218001,
       "Remove \"passed.py\"",

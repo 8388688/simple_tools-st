@@ -4,8 +4,7 @@ from os.path import dirname
 from sys import getdefaultencoding as gde
 from builtins import open as fopen
 
-from simple_tools.data_base import NULL, ST_WORK_SPACE
-from simple_tools.default import pass_
+from simple_tools.data_base import NULL, ST_WORK_SPACE, pass_
 from simple_tools.times import get_time_stamp as gettime, wait
 from stat import *
 from traceback import format_exc

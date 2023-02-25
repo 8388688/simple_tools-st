@@ -143,6 +143,17 @@ def _md_dir(__file_path, quiet=False):
             pass
 
 
+def pass_(returns=null, *args, **kwargs):
+    """没用的函数
+
+    @return: returns
+    """
+    if kwargs.get('quiet', False):
+        print(args)
+        print(kwargs)
+    return returns
+
+
 QUIET_P = True
 _md_dir(ST_WORK_SPACE, quiet=QUIET_P)
 _md_dir(join(ST_WORK_SPACE, 'bomb'), quiet=QUIET_P)
@@ -163,5 +174,6 @@ _md_dir(join(ST_WORK_SPACE, 'times'), quiet=QUIET_P)
 
 __all__ = [
     'ST_WORK_SPACE',
-    'usernameList', 'EOF', 'EMPTY_UUID', 'fp', 'NULL', 'null', 'science_tuple', 'tabs'
+    'usernameList', 'EOF', 'EMPTY_UUID', 'fp', 'NULL', 'null', 'science_tuple', 'tabs',
+    'pass_'
 ]

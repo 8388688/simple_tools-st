@@ -31,15 +31,25 @@
 
 [times]: times.py
 
+[version]: version.json
+
 [__init__]: __init__.py
 
 * 4.x
     * 4.4 更新: [版本自动升级更新][default]
+        * Release 4.4 [2023-01-19-14-25-50] (version_code: 20230225001)
+            * Rewrite of `search_to_str_in_list`, add two params named `recursion=False` and `insensitive_data=False`.
+            * 简化 [example.py][example] 中的部分程序
+            * Update `get_update()` function and rewrite the [`version.json`][version] file.
+            * Update [README.md#你知道吗][README] plate.
+            * > Add: Release 4.4 版本更新方面不兼容以前的所有版本.
+        * 4.4-beta3 [2023-01-19-14-25-50] (version_code: 20230219001)
+            * Update [README.md][README].
         * 4.4-beta2 [2023-02-18-17-55-10] (version_code: 20230218001)
-            * Delete ~~[passed.py][passed]~~(not found)
-            * Delete `breakpoint()` in passed.py
+            * Delete ~~[passed.py](passed.py)~~(not found).
+            * Delete `breakpoint()` in passed.py.
             * Update `times.wait()`.
-            * Move `passed.pass_()` to [default.py][default]
+            * Move `passed.pass_()` to [default.py][default].
         * 4.4-beta1 [2023-02-12-16-40-12] (version_code: 20230212001)
             * Update `generate_file_path`, add a **Distributed operations** option
               and supplemented its documents.

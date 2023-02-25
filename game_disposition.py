@@ -30,8 +30,8 @@ class Person:
 
     def __str__(self):
         return self.name + '的资料：\n生命值:' + str(self.life) + '\n饥饿值:' + str(self.hunger) \
-            + '\n经验值' + str(self.experience) + '\n体力:' + str(self.physicalStrength) \
-            + '\n防御值' + str(self.defense)
+            + '\n经验值:' + str(self.experience) + '\n体力:' + str(self.physicalStrength) \
+            + '\n防御值:' + str(self.defense)
 
     def __del__(self):
         del self.life, self.hunger, self.experience, self.physicalStrength, self.defense, self.foods
@@ -138,12 +138,10 @@ class Users:
 
         返回一个随机名字, 与 User 配对使用
         """
+
         u = usernameList[0][randint(0, len(usernameList[0]) - 1)] + '的' + usernameList[3][
-            randint(0, len(usernameList[3]) - 1)] + usernameList[1][randint(0, len(usernameList[1]) - 1)]
-        while u in Users.UserNameList:
-            u = usernameList[0][randint(0, len(usernameList[0]) - 1)] + '的' + usernameList[3][
-                randint(0, len(usernameList[3]) - 1)] + usernameList[1][
-                    randint(0, len(usernameList[1]) - 1)]
+            randint(0, len(usernameList[3]) - 1)] + usernameList[1][randint(0, len(usernameList[1]) - 1)] + \
+            usernameList[3][randint(0, len(usernameList[3]) - 1)]
         return u
 
     def save_user_info(self):
