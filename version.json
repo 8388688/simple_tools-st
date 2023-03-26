@@ -1,5 +1,5 @@
 {
-  "version": "4.4-beta4",
+  "version": "Release 4.4",
   "updatecontent": {
     "4.4-beta4": [
       20230225001,
@@ -33,19 +33,19 @@
     ],
     "4.4-pre1": [
       20230203002,
-      "¼ò»¯¸üÐÂ¡£",
+      "ç®€åŒ–æ›´æ–°ã€‚",
       "2023-02-03",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ],
     "4.3": [
       20230203001,
-      "¼ò»¯¸üÐÂ¡£",
+      "ç®€åŒ–æ›´æ–°ã€‚",
       "2023-02-03",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ],
     "4.2": [
       20230126001,
-      "data_process ¸üÐÂ¡£",
+      "data_process æ›´æ–°ã€‚",
       "2023-01-26",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ]
