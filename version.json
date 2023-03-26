@@ -1,7 +1,7 @@
 {
-  "version": "4.4",
+  "version": "4.4-beta4",
   "updatecontent": {
-    "4.4": [
+    "4.4-beta4": [
       20230225001,
       "Rewrite of search_to_str_in_list",
       "2023-02-18",
@@ -33,19 +33,19 @@
     ],
     "4.4-pre1": [
       20230203002,
-      "ç®€åŒ–æ›´æ–°ã€‚",
+      "¼ò»¯¸üÐÂ¡£",
       "2023-02-03",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ],
     "4.3": [
       20230203001,
-      "ç®€åŒ–æ›´æ–°ã€‚",
+      "¼ò»¯¸üÐÂ¡£",
       "2023-02-03",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ],
     "4.2": [
       20230126001,
-      "data_process æ›´æ–°ã€‚",
+      "data_process ¸üÐÂ¡£",
       "2023-01-26",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ]

@@ -1,12 +1,12 @@
-import json
 from http.client import RemoteDisconnected
 from os.path import join
-from requests import get
-from requests.exceptions import ConnectTimeout, ConnectionError
 from traceback import format_exc
 from webbrowser import open as webbopen  # web browser open
 
-from simple_tools.data_base import ST_WORK_SPACE, fp, null
+from requests import get
+from requests.exceptions import ConnectTimeout, ConnectionError
+
+from simple_tools.data_base import ST_WORK_SPACE
 from simple_tools.system_extend import delete
 
 __all__ = ['clear_module_cache', 'get_update']
