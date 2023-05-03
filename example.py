@@ -42,14 +42,14 @@ def test():
         wait(1)
         review(mmm, sep='.', line_sign=1)
         lists_ = list(range(3, 15, 2))
-        print('打乱顺序前:', bl(lists_), sep='')
+        print('打乱顺序前:', review(lists_), sep='')
         lists2_ = create_random_list(values=lists_)
         print('打乱顺序后:', review(lists2_), sep='')
         # draw1(right_=False, max_=200, clear_=True)
         get_files('..', True)
 
         divisionAlgorithm(42897, 18644)
-        bl(aa, all_values=True)
+        review(aa, all_values=True)
         review(aa)
         print(get_time_stamp())
 

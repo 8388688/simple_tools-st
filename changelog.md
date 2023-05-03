@@ -37,7 +37,7 @@
 
 * 4.x
     * 4.4 更新: [版本自动升级更新][default]
-        * Release 4.4 [2023-01-19-14-25-50] (version_code: 20230225001)
+        * Release 4.4 [2023-03-25-16-25-56] (version_code: 20230225001)
             * Rewrite of `search_to_str_in_list`, add two params named `recursion=False` and `insensitive_data=False`.
             * 简化 [example.py][example] 中的部分程序
             * Update `get_update()` function and rewrite the [`version.json`][version] file.

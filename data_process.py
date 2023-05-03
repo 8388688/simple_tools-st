@@ -2,7 +2,7 @@ from simple_tools.data_base import NULL
 
 __all__ = ['binary_search', 'bl_properties', 'generate_bl_properties',
            'dimensional_list', 'filter_', 'search_to_str_in_list',
-           'bl', 'review', 'review']
+           'review']
 
 
 def binary_search(list2, item):
@@ -538,13 +538,6 @@ def search_to_str_in_list(input_object=NULL, testlist=NULL, **kwargs):
     # print('搜索结果：', output_list)
     del cache_output_list
     return output_list
-
-
-def bl(value, sep=':', line_sign=0, lines=False, all_values=False):
-    """WARNING: `bl` has stopped supporting in simple_tools 4.3-alpha2+"""
-    print('\033[0;31m' + bl.__doc__ + '\033[0m')
-    review(value, sep, line_sign, lines, all_values)
-    return -1
 
 
 def review(value, sep=':', line_sign=0, lines=False, all_values=True, deep=0, decorate=True, dict_sign=':'):

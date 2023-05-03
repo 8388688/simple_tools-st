@@ -16,6 +16,8 @@ safe_md(join(LOCAL_WORK_SPACE, 'pip-cache'))
 
 
 def check_and_install_package(*args):
+    print(
+        '\033[0;31m' + check_and_install_package.__name__ + ' 目前主要问题：无法检测过时升级的包，也无法自动升级这些包。\033[0m')
     pip_freeze_path = join(LOCAL_WORK_SPACE, 'pip-cache', 'pipfreeze.txt')
     system(executable + f" -m pip freeze>{pip_freeze_path}")
     pip_freeze_log = open(pip_freeze_path, 'r')
