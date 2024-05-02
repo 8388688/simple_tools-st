@@ -1,8 +1,8 @@
-from simple_tools.data_base import NULL
-
 __all__ = ['binary_search', 'bl_properties', 'generate_bl_properties',
-           'dimensional_list', 'filter_', 'search_to_str_in_list',
-           'review']
+           'dimensional_list', 'filter_', 'list2str',
+           'search_to_str_in_list', 'review', "equals_list",
+
+           "bl_properties_test"]
 
 
 def binary_search(list2, item):
@@ -20,178 +20,76 @@ def binary_search(list2, item):
     return None
 
 
-def bl_properties(seqs, line_num=False, truly_number=False, __deep=0, __lines='', __numbers=(), **kwargs):
-    """bl 装饰
+def bl_properties(*args, **kwargs):
+    print(args)
+    print(kwargs)
+    print('代码重构...')
 
-    kwargs: title = None, 对于大列表套小列表的情况时的自定义表头
 
-    提出时间：202204051955xx
-    创建时间：20220406080946
-    最后修改时间：20230126113413
-    最后运行时间：20230126113422
+def generate_bl_properties(*args, **kwargs):
+    print(args)
+    print(kwargs)
+    print('代码重构...')
 
-    :param seqs: 要遍历的元素
-    :param line_num: 是否加行号，默认为 False
-    :param truly_number: 使用常规编号，而不是索引编号
-    :param __deep: 遍历深度
-    :param __lines:
-    :param __numbers:
-    :return:
-    """
 
-    def convert_list_to_str(lists, step=' '):
-        """
+prefix = []  # 为 `bl_properties_test` 准备的前置列表
 
-        前置一个列表转换 str 的函数
-        """
-        if type(lists) in {list, set, tuple}:
-            seq_armor = ''
-            for a001 in lists:
-                seq_armor += str(a001) + step
-            return seq_armor
-        else:
-            print('输入类型不正确')
-            return lists
 
-    fill_name = '<List>'
-    values = list(seqs) if type(seqs) == set else seqs
-    sequence_class_list = {set, list, tuple, dict}
-    special_list = {dict, }
-    signs = __lines
+def bl_properties_test(seq, title="Sequence", **kwargs):
+    global prefix
 
-    title = kwargs.get('title', NULL)
+    SEQUENCES_LINE = (list, tuple)
+    SEQUENCES_LIST = SEQUENCES_LINE + (dict, set)
 
-    for x in range(len(values)):
-        if type(values) in special_list:
-            bl_properties(seqs=tuple(zip(values.keys(), values.values())), line_num=line_num,
-                          truly_number=truly_number, __deep=__deep, __lines=__lines, __numbers=__numbers,
-                          title='dict')
-            return type(values)
-        elif type(values[x]) in sequence_class_list:  # 大列表套小列表（大数组套小数组）
-            if line_num:
-                cb = convert_list_to_str(__numbers, '>') + str(x + 1 if truly_number else x) + ':'
+    is_a_iterable_condition = kwargs.get("is_a_iterable_condition", lambda x: type(seq[x]) in SEQUENCES_LINE)
+    can_iter_condition = kwargs.get("can_iter_condition", lambda sequ: type(sequ) in SEQUENCES_LIST)
+    particularize_list_action = kwargs.get("particularize_list_action", lambda sequ: range(len(sequ)))
+    is_ended_list = kwargs.get("is_ended_list", lambda index, sequ: index + 1 == len(sequ))
+    return_val_one_by_one = kwargs.get("return_val_one_by_one", lambda si: str(seq[si]))
+    return_title_one_by_one = kwargs.get("return_title_one_by_one", lambda si: str(type(seq[si])))
+    iter_val_one_by_one = kwargs.get("iter_val_one_by_one", lambda si: seq[si])
+
+    # print(title)
+    if can_iter_condition(seq):
+        for i in particularize_list_action(seq):
+            if is_ended_list(i, seq):
+                prefix_passed = ("└-", "    ")
             else:
-                cb = ''
-            print(signs + ('└-' if x == len(values) - 1 else '├-') + cb + type(values[x]).__name__)
-            if x == len(values) - 1:
-                cb = '  '
+                prefix_passed = ("├-", "│   ")
+
+            # print(i)
+            if is_a_iterable_condition(i):
+                yield list2str(prefix + [prefix_passed[0], ], "") + return_title_one_by_one(i) + '-----'
+                # print(list2str(prefix + [prefix_passed[0], ], ""), type(seq[i]), sep="")
+                prefix.append(prefix_passed[1])
+                print('------', iter_val_one_by_one(i))
+                for item in bl_properties_test(iter_val_one_by_one(i),
+                                               is_a_iterable_condition=is_a_iterable_condition,
+                                               can_iter_condition=can_iter_condition,
+                                               particularize_list_action=particularize_list_action,
+                                               is_ended_list=is_ended_list,
+                                               return_val_one_by_one=return_val_one_by_one,
+                                               return_title_one_by_one=return_title_one_by_one,
+                                               iter_val_one_by_one=iter_val_one_by_one):
+                    yield item
+                prefix.pop(-1)
             else:
-                cb = '│ '
-            if truly_number:
-                cb2 = x + 1
-            else:
-                cb2 = x
-            bl_properties(seqs=values[x], line_num=line_num, truly_number=truly_number, __deep=__deep + 1,
-                          __lines=signs + cb, __numbers=tuple(list(__numbers) + [cb2, ]), title=title)
-        else:
-            if x == len(values) - 1:
-                cb = '└-'
-            else:
-                cb = '├-'
-            if line_num:
-                cb2 = convert_list_to_str(__numbers, '>') + str(x + 1 if truly_number else x) + ':'
-            else:
-                cb2 = ''
-            print(signs + cb, cb2, values[x], sep='')
-
-
-def generate_bl_properties(seqs, line_num=False, truly_number=False, __deep=0, __lines='', __numbers=()):
-    """bl 装饰
-
-    提出时间：20220423174418
-    创建时间：20220423175444
-    最后修改时间：20220423200512
-    最后运行时间：20220423200623
-
-    :param seqs: 要遍历的元素
-    :param line_num: 是否加行号，默认为 False
-    :param truly_number: 使用常规编号，而不是索引编号
-    :param __deep: 遍历深度
-    :param __lines: 行标
-    :param __numbers: 索引编号
-    :return:
-    """
-
-    def convert_list_to_str(lists, step=' '):
-        """
-
-        前置一个列表转换 str 的函数
-        """
-        if type(lists) in {list, set, tuple}:
-            seq_armor = ''
-            for a001 in lists:
-                seq_armor += str(a001) + step
-            return seq_armor
-        else:
-            print('输入类型不正确')
-            return lists
-
-    fill_name = '<List>'
-    sequence_class_list = {list, tuple, set, dict}
-    values = list(seqs) if type(seqs) == set else seqs
-    signs = __lines
-    if type(values) == dict:
-        for x in values:
-            if type(values[x]) in sequence_class_list:
-                if line_num:
-                    cb = convert_list_to_str(__numbers, '>') + str(x + 1 if truly_number else x) + ':'
-                else:
-                    cb = ''
-                yield signs + ('└-' if x == list(values.keys())[-1] else '├-') + cb + str(x)
-                if x == list(values.keys())[-1]:
-                    cb = '  '
-                else:
-                    cb = '│ '
-                if truly_number:
-                    cb2 = x + 1
-                else:
-                    cb2 = x
-                for t in generate_bl_properties(seqs=values[x], line_num=line_num, truly_number=truly_number,
-                                                __deep=__deep + 1, __lines=signs + cb,
-                                                __numbers=tuple(list(__numbers) + [cb2, ])):
-                    yield t
-            else:
-                if x == len(values) - 1:
-                    cb = '└-'
-                else:
-                    cb = '├-'
-                if line_num:
-                    cb2 = convert_list_to_str(__numbers, '>') + str(x + 1 if truly_number else x) + ':'
-                else:
-                    cb2 = ''
-                yield signs + cb + cb2 + (str(x) + ':' + str(values[x])
-                                          if type(values) == dict else str(values[x]))
+                yield list2str(prefix + [prefix_passed[0], ], "") + return_val_one_by_one(i)
+                # print(list2str(prefix + [prefix_passed[0], ], ""), seq[i], sep="")
     else:
-        for x in range(len(values)):
-            if type(values[x]) in sequence_class_list:
-                if line_num:
-                    cb = convert_list_to_str(__numbers, '>') + str(x + 1 if truly_number else x) + ':'
-                else:
-                    cb = ''
-                yield signs + ('└-' if x == len(values) - 1 else '├-') + cb + type(values[x]).__name__
-                if x == len(values) - 1:
-                    cb = '  '
-                else:
-                    cb = '│ '
-                if truly_number:
-                    cb2 = x + 1
-                else:
-                    cb2 = x
-                for t in generate_bl_properties(seqs=values[x], line_num=line_num, truly_number=truly_number,
-                                                __deep=__deep + 1, __lines=signs + cb,
-                                                __numbers=tuple(list(__numbers) + [cb2, ])):
-                    yield t
-            else:
-                if x == len(values) - 1:
-                    cb = '└-'
-                else:
-                    cb = '├-'
-                if line_num:
-                    cb2 = convert_list_to_str(__numbers, '>') + str(x + 1 if truly_number else x) + ':'
-                else:
-                    cb2 = ''
-                yield signs + cb + cb2 + (str(values[x]) + ':' + str(values[x].values())
-                                          if type(values) == dict else str(values[x]))
+        print(seq)
+
+
+def list2str(lst, sep: str = '') -> str:
+    str_l = ""
+    if lst:
+        for i in lst[:-1]:
+            str_l += str(i) + sep
+        str_l += str(lst[-1])
+    else:
+        pass
+        # print("传入参数不能为空！")
+    return str_l
 
 
 def dimensional_list(value_list):
@@ -252,7 +150,7 @@ def filter_(v_str, pattern=('int',), contrary=False, returns=False, auto_convert
     cache_dict = trash = ''
     class_ = pattern
     if 'control' in class_ or 'con' in class_:
-        if type(base_string) == int or type(base_string) == float:
+        if type(base_string) is int or type(base_string) is float:
             if not contrary:
                 cache_dict = ''
             else:
@@ -277,7 +175,7 @@ def filter_(v_str, pattern=('int',), contrary=False, returns=False, auto_convert
             else:
                 cache_dict = str(cache_dict)
     elif 'int' in class_:
-        if type(base_string) == int or type(base_string) == float:
+        if type(base_string) is int or type(base_string) is float:
             if not contrary:
                 cache_dict = int(base_string)
             else:
@@ -336,7 +234,7 @@ def filter_(v_str, pattern=('int',), contrary=False, returns=False, auto_convert
                     else:
                         cache_dict = str(cache_dict)
     elif 'float' in class_:
-        if type(base_string) == int or type(base_string) == float:
+        if type(base_string) is int or type(base_string) is float:
             if not contrary:
                 cache_dict = float(base_string)
             else:
@@ -485,21 +383,21 @@ def filter_(v_str, pattern=('int',), contrary=False, returns=False, auto_convert
         return cache_dict
 
 
-def search_to_str_in_list(input_object=NULL, testlist=NULL, **kwargs):
+def search_to_str_in_list(input_object=None, testlist=None, **kwargs):
     list_tips = kwargs.get('list_tips', '输入一个列表：')
     obj_tips = kwargs.get('obj_tips', '输入一个str')
     recursion = kwargs.get('recursion', False)
     insensitive_data = kwargs.get('insensitive_data', False)
     output_list = []
     cache_output_list = []
-    if testlist is NULL:
+    if testlist is None:
         testlist = eval(input(list_tips))
     elif recursion:
         testlist = dimensional_list(testlist)
     else:
         pass
 
-    if input_object is NULL:
+    if input_object is None:
         obj2 = input(obj_tips)
     else:
         obj2 = input_object
@@ -559,11 +457,11 @@ def review(value, sep=':', line_sign=0, lines=False, all_values=True, deep=0, de
 
     count = cache_count = 0
     deeps = deep
-    if type(value) == dict:
+    if type(value) is dict:
         if lines:
             print()
         for a000 in value:
-            if type(a000) == list or type(a000) == tuple or type(a000) == set or type(a000) == dict:
+            if type(a000) is list or type(a000) is tuple or type(a000) is set or type(a000) is dict:
                 review(a000, sep=sep, line_sign=line_sign, lines=lines, all_values=all_values, deep=deep + 1,
                        decorate=decorate)
             elif line_sign:
@@ -576,11 +474,11 @@ def review(value, sep=':', line_sign=0, lines=False, all_values=True, deep=0, de
                     print('├ ' * deeps, str(a000) + dict_sign + str(value[a000]), sep='')
             else:
                 print(str(a000) + dict_sign + str(value[a000]))
-    elif type(value) == str or type(value) == list or type(value) == tuple or type(value) == set:
+    elif type(value) is str or type(value) is list or type(value) is tuple or type(value) is set:
         if lines:
             print()
         for a000 in value:
-            if type(a000) == list or type(a000) == tuple or type(a000) == set or type(a000) == dict:
+            if type(a000) is list or type(a000) is tuple or type(a000) is set or type(a000) is dict:
                 review(a000, sep=sep, line_sign=line_sign, lines=lines, all_values=all_values, deep=deep + 1,
                        decorate=decorate)
             elif line_sign:
@@ -597,3 +495,21 @@ def review(value, sep=':', line_sign=0, lines=False, all_values=True, deep=0, de
         print('输入类型不正确')
         return 1
     del cache_count
+
+
+def equals_list(*args: list | set | tuple):
+    k_equ = True
+    if not args:
+        k_equ = False
+    else:
+        std_ch = args[0]
+        for i in args:
+            i_ch = list(i)
+            for j in std_ch:
+                if j in i_ch:
+                    i_ch.pop(i_ch.index(j))
+                else:
+                    k_equ = False
+            if i_ch:
+                k_equ = False
+    return k_equ

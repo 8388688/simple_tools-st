@@ -1,23 +1,47 @@
 {
-  "version": "4.4",
+  "version": "4.5",
   "updatecontent": {
+    "4.5": [
+      20240501001,
+      "程序规范化更新",
+      "2024-05-01",
+      ""
+    ],
+    "4.5-pre3": [
+      20240215001,
+      "",
+      "2024-02-15",
+      ""
+    ],
+    "4.5-pre2": [
+      20240214001,
+      "",
+      "2024-02-14",
+      ""
+    ],
+    "4.5-pre1": [
+      20231215001,
+      "归并更新",
+      "2023-12-15",
+      ""
+    ],
     "4.4": [
       20230325001,
       "Upgrade in silence",
       "2023-03-25",
-      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip"
+      ""
     ],
     "4.4-beta4": [
       20230225001,
       "Rewrite of search_to_str_in_list",
       "2023-02-25",
-      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip"
+      ""
     ],
     "4.4-beta3": [
       20230219001,
       "Edited README.md",
       "2023-02-19",
-      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta2.zip"
+      ""
     ],
     "4.4-beta2": [
       20230218001,
@@ -35,23 +59,23 @@
       20230203003,
       "Add a mirror source code.",
       "2023-02-03",
-      "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-beta1.zip"
+      ""
     ],
     "4.4-pre1": [
       20230203002,
-      "�򻯸��¡�",
+      "简化更新。",
       "2023-02-03",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ],
     "4.3": [
       20230203001,
-      "�򻯸��¡�",
+      "简化更新。",
       "2023-02-03",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ],
     "4.2": [
       20230126001,
-      "data_process ���¡�",
+      "data_process 更新。",
       "2023-01-26",
       "https://github.com/8388688/simple_tools/archive/refs/tags/4.4-pre1.zip"
     ]

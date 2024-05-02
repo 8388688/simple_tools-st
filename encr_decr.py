@@ -2,8 +2,7 @@ from random import randint
 from sys import byteorder, getfilesystemencoding
 
 from simple_tools.data_process import filter_
-from simple_tools.data_base import NULL
-from simple_tools.hash_values import get_md5
+from simple_tools.hash import get_md5
 
 __all__ = [
     'absolute_encryption', 'digital_decryption', 'file_encryption',
@@ -11,7 +10,7 @@ __all__ = [
 ]
 
 
-def absolute_encryption(value1, print_=False, steps=',', pattern=NULL, signed=True):
+def absolute_encryption(value1, print_=False, steps=',', pattern=None, signed=True):
     """绝对加密
 
     :param value1: 加密的字符串
@@ -34,7 +33,7 @@ def absolute_encryption(value1, print_=False, steps=',', pattern=NULL, signed=Tr
             pass  # 此代码不可删除
         elif pattern == 16:
             cache_encryption = hex(cache_encryption)
-        elif pattern is NULL:
+        elif pattern is None:
             a = randint(0, 3)
             if a == 0:
                 cache_encryption = bin(cache_encryption)
@@ -151,7 +150,7 @@ def md5_encryption(string, encr_func=get_md5):
     return a_str
 
 
-def normal_encryption(string, mode, key=NULL, key_length=16, details=False, coding=getfilesystemencoding(), **kwargs):
+def normal_encryption(string, mode, key=None, key_length=16, details=False, coding=getfilesystemencoding(), **kwargs):
     """`normal_encryption` has been stopped supporting in 4.2-beta2+"""
     print('\033[1;31m' + normal_encryption.__doc__ + '\033[0m')
     string_transit = string.encode(coding)
@@ -159,14 +158,14 @@ def normal_encryption(string, mode, key=NULL, key_length=16, details=False, codi
                                         quiet=kwargs.get('quiet', True)).decode(coding)
 
 
-def normal_encryption_with_bytes(string: bytes, mode, key=NULL, key_length=16, details=False,
+def normal_encryption_with_bytes(string: bytes, mode, key=None, key_length=16, details=False,
                                  coding=getfilesystemencoding(), **kwargs):
     """普通的加密
 
     :param string: 加密的字节串 (废话)。
     :param mode: 指定是加密还是解密：True 是加密，False 是解密。
-    :param key: 指定加密所用的 KEY，不指定或指定为 NULL 就是自动生成密码，[注1]
-    :param key_length: 密钥长度：只有在 key 形参被指定为 NULL 的时候才被执行，[注2]
+    :param key: 指定加密所用的 KEY，不指定或指定为 None 就是自动生成密码，[注1]
+    :param key_length: 密钥长度：只有在 key 形参被指定为 None 的时候才被执行，[注2]
     :param details: 详细返回 [注3]
     :param coding: 三个取值 [getfilesystemencoding(), 'utf-8', 'gbk',] 默认为 getfilesystemencoding
     :return: 详见 details
@@ -179,7 +178,7 @@ def normal_encryption_with_bytes(string: bytes, mode, key=NULL, key_length=16, d
 
     """
 
-    if key is NULL:
+    if key is None:
         KEY = ''
         lengthening = max(key_length, 4)
         # 生成 KEY

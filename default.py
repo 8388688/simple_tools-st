@@ -10,8 +10,8 @@ from simple_tools.data_base import ST_WORK_SPACE
 from simple_tools.system_extend import delete
 
 __all__ = ['clear_module_cache', 'get_update']
-__version__ = 'Release 4.4'
-version_code = 20230225001
+__version__ = 'Release 4.5'
+version_code = 20230501001
 
 LOG_FILE_PATH = join(ST_WORK_SPACE, 'default', 'get_update.txt', )
 log_file_entity = open(LOG_FILE_PATH, 'a')
@@ -33,7 +33,8 @@ def get_update():
                       'like Gecko) Chrome/107.0.0.0 Safari/537.36',
         # 'Connection': 'close'  # 不使用持久连接
     }
-    new_info = get(r'https://raw.githubusercontent.com/8388688/simple_tools/data/version.json', headers=headers).json()
+    new_info = get(r'https://raw.githubusercontent.com/8388688/simple_tools-st/data/version.json',
+                   headers=headers).json()
 
     print(new_info, type(new_info))
     if new_info['updatecontent'][new_info['version']][0] > version_code:

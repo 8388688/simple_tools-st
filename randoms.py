@@ -1,10 +1,9 @@
 import random
-from simple_tools import NULL
 
 __all__ = ['create_random_list', 'random_choice', 'random_pop']
 
 
-def create_random_list(start_=0, end_=10, step_=1, values=NULL, returns=True):
+def create_random_list(start_=0, end_=10, step_=1, values=None, returns=True):
     """生成随机数列
 
     生成一个随机数列，或把现有的数列打乱
@@ -18,7 +17,7 @@ def create_random_list(start_=0, end_=10, step_=1, values=NULL, returns=True):
     :return: 当 returns 为 True 时返回乱序的数列，否则返回 0
     """
     list1 = lists = []  # 列表元素初始化
-    if values is NULL:
+    if values is None:
         for a000 in range(start_, end_, step_):
             # for 生成有序的数列
             lists.append(a000)  # 在数列的末尾增添元素

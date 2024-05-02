@@ -1,43 +1,59 @@
 # 中文名: system_扩展
-import os
-from os.path import dirname
+from os import getcwd, remove, rename, stat, listdir, rmdir, mkdir, chmod
+from os.path import abspath as os_abspath, dirname, exists, join, islink, isfile, getsize, isjunction, isdir
 from sys import getdefaultencoding as gde
 from builtins import open as fopen
+from random import randrange
 
-from simple_tools.data_base import NULL, ST_WORK_SPACE, pass_
+from simple_tools.data_base import ST_WORK_SPACE, pass_
 from simple_tools.times import get_time_stamp as gettime, wait
 from stat import *
 from traceback import format_exc
 
-SYSTEM_EXTEND_WORK_SPACE = os.path.join(ST_WORK_SPACE, 'system_extend')
+SYSTEM_EXTEND_WORK_SPACE = join(ST_WORK_SPACE, 'system_extend')
 
-log_file_path = os.path.join(SYSTEM_EXTEND_WORK_SPACE, 'logs.txt')
+log_file_path = join(SYSTEM_EXTEND_WORK_SPACE, 'logs.txt')
 log_file_entity = fopen(log_file_path, 'a')
-log_file_entity.write('-' * 10 + gettime() + '-' * 10 + '\n' + 'file:' + __name__ + '\n' + 'path:' + __file__)
+log_file_entity.write(
+    '-' * 10 + gettime(idiotMode=True) + '-' * 10 + '\n' + 'file:' + __name__ + '\n' + 'path:' + __file__)
 log_file_entity.close()
 
-__all__ = ['File',
-           'fp', 'delete', 'get_files',
-           'file_pattern', 'file_remove', 'get_file_name',
-           'get_file_path', 'generate_file_path',
-           'get_file_size', 'get_file_suffix', 'safe_md']
+__all__ = [
+    "File", "fp",
 
-fp = os.getcwd()
+    "file_pattern", "file_remove", "get_file_name",
+    "get_fp", "get_fp_gen",
+    "get_file_suffix", "safe_md",
+    "quick_create_file", "safe_delete",
 
-system_pro = 'mac-os' if os.path.join('ab', 'cd') == 'ab/cd' else \
-    ('windows' if os.path.join('ab', 'cd') == 'ab\\cd' else 'unknown')
+    "delete", "delete_tree",
+    "get_files", "get_fp_generator", "generate_file_path",
+    "get_file_path"
+]
+
+fp = getcwd()
+
+if join('ab', 'cd') == 'ab/cd':
+    system_pro = 'mac-os'
+    separate = "/"
+elif join('ab', 'cd') == 'ab\\cd':
+    system_pro = 'windows'
+    separate = "\\"
+else:
+    system_pro = 'unknown'
+    separate = "unknown"
 
 
 class File:
     def __init__(self, file_path):
         print(f'WARNING: function {File.__name__} is still a Experimental Features')
-        if os.path.exists(file_path):
-            self.file_path = os.path.abspath(file_path)
-            self.fp = os.path.dirname(file_path)
+        if exists(file_path):
+            self.file_path = os_abspath(file_path)
+            self.fp = dirname(file_path)
             self.name = file_path.split('\\')[-1] if system_pro == 'windows' else (
                 file_path.split('/')[-1] if system_pro == 'mac-os' else file_path)
 
-            file_stat = os.stat(file_path)
+            file_stat = stat(file_path)
 
             if S_ISREG(file_stat[0]):  # 判断是否一般文件
                 self.file_mode = 'Regular file'
@@ -63,9 +79,9 @@ class File:
             # print(S_IMODE(file_stat[0]))  # 返回文件权限的chmod格式
             # print(S_IFMT(file_stat[0]))  # 返回文件的类型
 
-            self.create_time = self.ct = os.stat(file_path).st_ctime  # 文件创建时间
-            self.access_time = self.at = os.stat(file_path).st_atime  # 文件最后访问时间
-            self.modification_time = self.mt = os.stat(file_path).st_mtime  # 文件最后修改时间
+            self.create_time = self.ct = stat(file_path).st_ctime  # 文件创建时间
+            self.access_time = self.at = stat(file_path).st_atime  # 文件最后访问时间
+            self.modification_time = self.mt = stat(file_path).st_mtime  # 文件最后修改时间
             self.permission = file_stat.st_mode  # 权限模式
             self.inode_number = file_stat.st_ino  # inode number
             self.device = file_stat.st_dev  # device
@@ -74,13 +90,13 @@ class File:
             self.group_id = file_stat.st_gid  # 所有用户的group id
             self.file_size = file_stat.st_size
 
-            if os.path.isfile(file_path):
-                self.size = os.path.getsize(file_path)
+            if isfile(file_path):
+                self.size = getsize(file_path)
                 self.suffix = self.name.split('.')[-1]
             else:
                 # self.size = get_file_size(file_path)
-                self.size = NULL
-                self.suffix = NULL
+                self.size = None
+                self.suffix = None
 
             """
             stat.S_ISUID: Set user ID on execution.                      不常用
@@ -150,21 +166,21 @@ def file_pattern(file_path=fp, binary=True, easy_options=False):
     undef_code = (-4, -5)
     button = -1
     now_fp = fp
-    if os.path.exists(file_path):
-        if os.path.isfile(file_path):
-            if os.path.getsize(file_path) <= 1:
+    if exists(file_path):
+        if isfile(file_path):
+            if getsize(file_path) <= 1:
                 button = 3
             else:
                 button = 4
-        elif os.path.isdir(file_path):
+        elif isdir(file_path):
             try:
-                os.listdir(file_path)
+                listdir(file_path)
             except PermissionError:
                 button = -3
             except MemoryError:
                 button = -5
             else:
-                if os.listdir(file_path):
+                if listdir(file_path):
                     button = 2
                 else:
                     button = 1
@@ -208,7 +224,11 @@ def file_remove(file_path=fp, all_files=False, all_folders=False,
 
     def only_remove(file_or_dir):
         nonlocal delete_dir
-        if os.path.exists(file_or_dir):  # 如果文件存在
+        if not exists(file_or_dir) and exists(file_or_dir + separate):
+            only_remove(file_or_dir + separate)
+            print("Windows 特色畸形文件 - %s" % file_or_dir)
+            return "Windows 特色畸形文件 - %s" % file_or_dir
+        if exists(file_or_dir):  # 如果文件存在
             if confirms:
                 select = input('确定删除%s吗?(<Any> or <space>)' % file_or_dir)
             else:
@@ -216,14 +236,19 @@ def file_remove(file_path=fp, all_files=False, all_folders=False,
             if select:
                 # 删除文件，可使用以下两种方法。
                 if forces:
-                    os.chmod(file_or_dir, S_IWRITE)
+                    chmod(file_or_dir, S_IRWXU)
+                    chmod(file_or_dir, S_IWRITE)
                 if not quiet:
                     print('删除文件 - %s' % file_or_dir)
-                if os.path.isfile(file_or_dir):
-                    os.remove(file_or_dir)
-                    # os.unlink(path)
+                if isfile(file_or_dir):
+                    remove(file_or_dir)
+                    # unlink(path)
                 elif all_folders:
-                    os.rmdir(file_or_dir)
+                    try:
+                        rmdir(file_or_dir + separate)
+                    except NotADirectoryError:
+                        print("WARNING: 出现一个与目标文件夹名称相同的非文件夹")
+                        remove(file_or_dir)
                 else:
                     print('跳过%s' % file_or_dir)
                     delete_dir = False
@@ -231,21 +256,21 @@ def file_remove(file_path=fp, all_files=False, all_folders=False,
                 print('操作已取消')
                 delete_dir = False
         else:
-            print('错误 - 找不到\"%s\"' % file_or_dir)  # 否则返回文件不存在
+            print('错误 - 找不到 \"%s\"' % file_or_dir)  # 否则返回文件不存在
             delete_dir = False
             # return 1
 
-    for a000 in generate_file_path(new_path, abspath=True, folders=all_folders, all_files=all_files,
-                                   do_file=lambda f: only_remove(f), do_dir=lambda f2: only_remove(f2)):
-        # print('将要删除的文件:', a000, 'Size:', os.path.getsize(a000))
+    for a000 in get_fp_gen(new_path, abspath=1, folders=all_folders, all_files=all_files,
+                           do_file=lambda f: only_remove(f), do_dir=lambda f2: only_remove(f2)):
+        # print('将要删除的文件:', a000, 'Size:', getsize(a000))
         pass_()
 
-    if delete_dir and os.path.exists(new_path):
-        os.rmdir(new_path)
+    if delete_dir:
+        only_remove(new_path)
     return 0
 
 
-def get_file_name(file_dir=fp):
+def get_fname(file_dir=fp):
     key_val = (('出错了(未知的错误)', []),
                ('出错了(内置错误: 未知)', []),
                ('出错了(内置错误: 下标越界)', []),
@@ -266,14 +291,15 @@ def get_file_name(file_dir=fp):
             string = string.encode(gde())
             print(string)
 
-    with fopen(os.path.join(SYSTEM_EXTEND_WORK_SPACE, 'lastrun.txt'), 'ab+') as traceback_file:
-        traceback_file.write(('-' * 10 + gettime() + '-' * 10 + '\n').encode(gde()))
+    with fopen(join(SYSTEM_EXTEND_WORK_SPACE, 'lastrun.txt'), 'ab+') as traceback_file:
+        traceback_file.write(('-' * 10 + gettime(idiotMode=True) + '-' * 10 + '\n').encode(gde()))
 
-        if os.path.isfile(file_dir):
-            return []
+        if isfile(file_dir):
+            # return []
+            return [file_dir, ]
         else:
             try:
-                return os.listdir(file_dir)
+                return listdir(file_dir)
             except FileNotFoundError:
                 button = 3
                 _fprint('%s\"%s\"' % (key_val[button], file_dir))
@@ -315,91 +341,16 @@ def get_file_name(file_dir=fp):
                 traceback_file.close()
 
 
-def get_file_path(file_path=fp, abspath=NULL, folders=False, format_list=False, **kwargs):
+def get_fp(file_path=fp, abspath=None, folders=False) -> tuple:
+    print(f"\033[0;36m{get_fp.__name__} 使用 {get_fp_gen.__name__} 的 API。\033[0m")
+    print(f"\033[0;31m由于 {get_fp.__name__} 函数受 API 限制，无法启用过滤器。\033[0m")
+    print(f"\033[0;31m推荐使用 {get_fp_gen.__name__} 函数。\033[0m")
+    return tuple(get_fp_gen(file_path=file_path, abspath=abspath, folders=folders))
+
+
+def get_fp_gen(file_path=fp, abspath=0, files=True, folders=False, __deep=0, **kwargs):
     """获取文件路径
 
-    输出时检测如果是一个文件夹，就以列表的格式输出，否则以str的格式输出
-
-    :param file_path: 目标文件或路径
-    :param abspath: 使用绝对路径
-    :param folders: 也输出文件夹
-    :param format_list: 输出时强制转换成列表格式
-    :param kwargs: 高级选项：
-    \n from_size: 限制文件大小下限
-    \n to_size: 限制文件大小上限
-    \n suffix: 限制文件后缀名(不加“.”)
-    :return: 如果是一个目录就以列表的格式输出，否则以str的格式输出
-
-    """
-    files = []
-    fx = get_file_name(file_path)
-    extension = kwargs
-    from_size = extension.get('from_size', 0)
-    to_size = extension.get('to_size', NULL)
-    suffix = extension.get('suffix', NULL)
-    include = extension.get('include', NULL)
-    exclude = extension.get('exclude', NULL)
-    case_sensitive = extension.get('case_sensitive', False)
-    # extension.get('', default=NULL)
-
-    for file in fx:
-        if os.path.isfile(os.path.join(file_path, file)):
-            if (to_size is NULL or os.path.getsize(os.path.join(file_path, file)) < to_size) \
-                    and from_size < os.path.getsize(os.path.join(file_path, file)) and \
-                    (suffix is NULL or os.path.join(file_path, file).split('.')[-1] == suffix) and \
-                    (include is NULL or list(filter(
-                        lambda pi: (pi in os.path.join(file_path, file)) if case_sensitive else (
-                                pi.lower() in os.path.join(file_path, file).lower()), include))) and \
-                    (exclude is NULL or not list(filter(
-                        lambda pe: (pe in os.path.join(file_path, file)) if case_sensitive else (
-                                pe.lower() in os.path.join(file_path, file).lower()), exclude))):
-                if abspath:
-                    files.append(str(os.path.join(os.path.abspath(file_path), file)))
-                elif abspath is NULL:
-                    files.append(str(os.path.join(file_path, file)))
-                else:
-                    files.append(str(file))
-        else:
-            if format_list:
-                for i in get_file_path(os.path.join(file_path, file) + '\\', abspath=abspath,
-                                       format_list=format_list,
-                                       from_size=extension.get('from_size', 0),
-                                       to_size=extension.get('to_size', NULL),
-                                       suffix=extension.get('suffix', NULL),
-                                       include=extension.get('include', NULL),
-                                       exclude=extension.get('exclude', NULL),
-                                       case_sensitive=case_sensitive):
-                    files.append(i)
-                if folders:
-                    files.append(os.path.join(file_path, file))
-            else:
-                files.append(get_file_path(os.path.join(file_path, file) + '\\', abspath=abspath,
-                                           format_list=format_list,
-                                           from_size=extension.get('from_size', 0),
-                                           to_size=extension.get('to_size', NULL),
-                                           suffix=extension.get('suffix', NULL),
-                                           include=extension.get('include', NULL),
-                                           exclude=extension.get('exclude', NULL),
-                                           case_sensitive=extension.get('case_sensitive', False)))
-
-    if os.path.isfile(file_path):
-        if abspath:
-            return os.path.abspath(file_path)
-        elif format_list:
-            return [file_path, ]
-        else:
-            return file_path
-    else:
-        if format_list:
-            return [files, ]
-        else:
-            return files
-
-
-def generate_file_path(file_path=fp, abspath=NULL, folders=False, __deep=0, **kwargs):
-    """获取文件路径
-
-    输出时检测如果是一个文件夹，就以列表的格式输出，否则以str的格式输出
     \n from_size: 限制文件大小下限
     \n to_size: 限制文件大小上限
     \n suffix: 限制文件后缀名(不加".")
@@ -408,125 +359,145 @@ def generate_file_path(file_path=fp, abspath=NULL, folders=False, __deep=0, **kw
     \n case_sensitive: [针对 include]是否区分大小写, 默认为 False(不区分)
     \n do_file: 针对每一个文件要做什么
     \n do_dir: 针对每一个文件夹要做什么
-
-    示例:
-    ```python
-
-        for i in generate_file_path('H:/2020/Temp', folders=True,
-                                do_file=lambda f: print(f, 'isfile:', os.path.isfile(f)),
-                                do_dir=lambda f2: print(f2, 'isdir:', os.path.isdir(f2))):
-            pass
-    ```
-    --------
-    或者是这样
-    ```python
-        # 删除 `H:/2020/Temp` 中的所有文件（文件夹）
-        for i in generate_file_path('H:/2020/Temp', folders=True,
-                                do_file=lambda f: os.unlink(f),
-                                do_dir=lambda f2: os.rmdir(f2)):
-            print('Delete file:', i)
-    ```
-
+    \n precedence_dir: 如果此项被启用，那么输出时优先输出文件夹，否则优先输出文件。
+    \n
+    \n 当 file_path 被指定为单个文件时，只返回这个文件本身。
+    \n 当 file_path 被指定为一个空文件夹时，不返回任何数据。
+    \n
+    \n 示例:
+    \n
+    \n ```python
+    \n     # 删除 `H:/2020/Temp` 中的所有文件（文件夹）
+    \n     for i in get_fp_gen('H:/2020/Temp', folders=True,
+    \n                             do_file=lambda f: print(f, 'isfile:', isfile(f)),
+    \n                             do_dir=lambda f2: print(f2, 'isdir:', isdir(f2))):
+    \n         pass
+    \n ```
+    \n --------
+    \n
+    \n 或者是这样
+    \n
+    \n ```python
+    \n     # 删除 `H:/2020/Temp` 中的所有文件（文件夹）
+    \n     for i in get_fp_gen('H:/2020/Temp', folders=True,
+    \n                             do_file=lambda f: unlink(f),
+    \n                             do_dir=lambda f2: rmdir(f2)):
+    \n         print('Delete file:', i)
+    \n ```
+    \n
+    \n 空文件示例
+    \n
+    \n ```Python
+    \n     for i in get_fp_gen('H:/2020/Temp/single.file'):
+    \n         print(i)
+    \n ```
+    \n
+    \n 输出结果:
+    \n
+    \n ```H:/2020/Temp/single.file```
+    \n
+    \n 空目录示例
+    \n
+    \n ```Python
+    \n     for i in get_fp_gen('H:/2020/Temp/EmptyDir'):
+    \n         print(i)
+    \n ```
+    \n
+    \n 输出结果: ``` ```
+    \n
+    \n -----------
+    \n abspath 示例: 0 = None, 1 = True = absolute path, 2 = False = filename, 3 = 相对内容根的路径
+    \n
     :param file_path: 目标文件或路径
     :param abspath: 使用绝对路径
-    :param folders: 也输出文件夹
+    :param files: 是否输出文件
+    :param folders: 是否输出文件夹
     :param __deep: 文件递归深度(未使用)
     :param kwargs: 高级选项:
-    :return: 如果是一个目录就以列表的格式输出，否则以str的格式输出
+    :return: 以列表的格式输出
 
     """
-    fx = get_file_name(file_path)
+    fx = get_fname(file_path)
 
     extension = kwargs
-    from_size = extension.get('from_size', -1)
-    to_size = extension.get('to_size', NULL)
-    suffix = extension.get('suffix', NULL)
-    include = extension.get('include', NULL)
-    exclude = extension.get('exclude', NULL)
+    # extension.get('', default=None)
+
+    # 以下是正常的参数
+    from_size = extension.get('from_size', 0)
+    to_size = extension.get('to_size', None)
+    suffix = extension.get('suffix', None)
+    include = extension.get('include', None)
+    exclude = extension.get('exclude', None)
     case_sensitive = extension.get('case_sensitive', False)
+    do_dir_pre = extension.get('do_dir_pre', pass_)
+    do_dir_later = extension.get('do_dir_later', pass_)
+    skip_symlink = extension.get('skip_sl', 2)  # 0 = Exclude, 1 = Direct, 2 = Follow
+    from_root_fp = extension.get("__from_root_fp", "")
+
+    # 以下为准备废弃的参数
     do_file = extension.get('do_file', pass_)
     do_dir = extension.get('do_dir', pass_)
-    # extension.get('', default=NULL)
+    precedence_dir = extension.get("precedence_dir", False)
 
     for file in fx:
-        if os.path.isfile(os.path.join(file_path, file)):
-            if (to_size is NULL or os.path.getsize(os.path.join(file_path, file)) < to_size) \
-                    and from_size <= os.path.getsize(os.path.join(file_path, file)) and \
-                    (suffix is NULL or os.path.join(file_path, file).split('.')[-1] == suffix) and \
-                    (include is NULL or list(filter(
-                        lambda pi: (pi in os.path.join(file_path, file)) if case_sensitive else (
-                                pi.lower() in os.path.join(file_path, file).lower()), include))) and \
-                    (exclude is NULL or not list(filter(
-                        lambda pe: (pe in os.path.join(file_path, file)) if case_sensitive else (
-                                pe.lower() in os.path.join(file_path, file).lower()), exclude))):
-                if abspath:
-                    yield str(os.path.join(os.path.abspath(file_path), file))
-                elif abspath is NULL:
-                    yield str(os.path.join(file_path, file))
+        abs_fp_depart = (file_path, file, from_root_fp)
+        abs_fp = join(abs_fp_depart[0], abs_fp_depart[1])
+        if isfile(abs_fp) or ((islink(abs_fp) or isjunction(abs_fp)) and skip_symlink in [0, 1]):
+            f_size = getsize(abs_fp) if isfile(abs_fp) else None
+            if (islink(abs_fp) or isjunction(abs_fp)) and skip_symlink in [0, ]:
+                continue
+            elif (to_size is None or f_size is None or f_size < to_size) \
+                    and (f_size is None or from_size <= f_size) and \
+                    (suffix is None or abs_fp.split('.')[-1] == suffix) and \
+                    (include is None or list(filter(
+                        lambda pi: (pi in abs_fp) if case_sensitive else (
+                                pi.lower() in abs_fp.lower()), include))) and \
+                    (exclude is None or not list(filter(
+                        lambda pe: (pe in abs_fp) if case_sensitive else (
+                                pe.lower() in abs_fp.lower()), exclude))):
+                if abspath is True or abspath == 1:
+                    yld = str(join(os_abspath(file_path), file))
+                elif abspath is None or abspath == 0:
+                    yld = str(abs_fp)
+                elif abspath is False or abspath == 2:
+                    yld = str(file)
+                elif abspath == 3:
+                    yld = join(abs_fp_depart[2], file)
                 else:
-                    yield str(file)
-                do_file(str(os.path.join(os.path.abspath(file_path), file)))
+                    yld = str(abs_fp)
+
+                if files:
+                    yield yld
+                    do_file(yld)
+                else:
+                    pass
         else:
-            for a000 in generate_file_path(os.path.join(file_path, file) + '/', abspath=abspath, folders=folders,
-                                           from_size=from_size, to_size=to_size, suffix=suffix, include=include,
-                                           exclude=exclude, case_sensitive=case_sensitive, do_file=do_file,
-                                           do_dir=do_dir):
-                yield a000
+            yld = abs_fp
             if folders:
-                yield os.path.join(file_path, file)
-                do_dir(os.path.join(file_path, file))
-
-
-def get_file_size(path_var=fp, all_files=True, details=False, **kwargs):
-    extension = kwargs
-    from_size = extension.get('from_size', 0)
-    to_size = extension.get('to_size', NULL)
-    suffix = extension.get('suffix', NULL)
-    include = extension.get('include', NULL)
-    exclude = extension.get('exclude', NULL)
-    case_sensitive = extension.get('case_sensitive', False)
-    # extension.get('', default=NULL)
-
-    size, files, folders = 0, 0, 0
-    if os.path.isdir(path_var):
-        for i in os.listdir(path_var):
-            path_new = os.path.join(path_var, i)
-            if os.path.isfile(path_new):
-                if (to_size is NULL or os.path.getsize(os.path.join(path_var, i)) < to_size) \
-                        and from_size < os.path.getsize(os.path.join(path_var, i)) and \
-                        (suffix is NULL or os.path.join(path_var, i).split('.')[-1] == suffix) and \
-                        (include is NULL or list(filter(
-                            lambda pi: (pi in os.path.join(path_var, i)) if case_sensitive else (
-                                    pi.lower() in os.path.join(path_var, i).lower()), include))) and \
-                        (exclude is NULL or not list(filter(
-                            lambda pe: (pe in os.path.join(path_var, i)) if case_sensitive else (
-                                    pe.lower() in os.path.join(path_var, i).lower()), exclude))):
-                    files += 1
-                    size += os.path.getsize(path_new)
-            elif all_files:
-                folders += 1
-                gfs = get_file_size(path_new, True, True, from_size=from_size, to_size=to_size,
-                                    suffix=suffix, include=include, exclude=exclude,
-                                    case_sensitive=case_sensitive)
-                size += gfs[0]
-                files += gfs[1]
-                folders += gfs[2]
-            else:
-                print(path_new, '是文件夹')
-    else:
-        files += 1
-        size += os.path.getsize(path_var)
-    if details:
-        return size, files, folders
-    else:
-        return size
+                do_dir_pre(yld)
+            if folders and precedence_dir:
+                yield yld
+                do_dir(yld)
+            for a000 in get_fp_gen(abs_fp + separate, abspath=abspath, files=files, folders=folders,
+                                   from_size=from_size, to_size=to_size, suffix=suffix, include=include,
+                                   exclude=exclude, case_sensitive=case_sensitive, do_file=do_file,
+                                   do_dir=do_dir, do_dir_pre=do_dir_pre, do_dir_later=do_dir_later,
+                                   skip_sl=skip_symlink, precedence_dir=precedence_dir,
+                                   __from_root_fp=join(from_root_fp, abs_fp_depart[1])):
+                yield a000
+            yld = abs_fp
+            if folders:
+                do_dir_later(yld)
+            if folders and not precedence_dir:
+                yield yld
+                do_dir(yld)
 
 
 def get_file_suffix(file_path=fp, sort=True, show_details=False):
     fp_ = file_path
     keys = []
 
-    for i in generate_file_path(fp_, abspath=False):
+    for i in get_fp_gen(fp_, abspath=False):
         keys.append(str.lower(i.split('.')[-1]))
         if show_details:
             print(i)
@@ -541,7 +512,7 @@ def safe_md(file_name_or_file_path, quiet=False):
     lfe = fopen(log_file_path, 'a')
     try:
         tell = '%s 存在\n' % file_name_or_file_path
-        os.mkdir(file_name_or_file_path) if not os.path.exists(file_name_or_file_path) else pass_()
+        mkdir(file_name_or_file_path) if not exists(file_name_or_file_path) else pass_()
     except FileNotFoundError:
         tell = '创建文件夹时出现错误: 指定的文件夹不存在 - %s\n正在重新创建. . .\n' % file_name_or_file_path
         # safe_md(dirname(file_name_or_file_path))
@@ -565,5 +536,41 @@ def quick_create_file(file_path, size):
     fx.close()
 
 
-delete = file_remove
-get_files = generate_file_path
+def safe_delete(file_path, buffering=16777216):
+    for i in get_fp_gen(file_path, folders=False):
+        size = getsize(i)
+        file = open(i, "w", buffering=buffering)
+        while size > 0:
+            print("生成字节")
+            buffer = ""
+            # # # # # mode 1
+            for char in range(min(size, buffering)):
+                buffer += chr(randrange(32, 127))
+            # # # # # mode 2
+            # buffer = "\0" * buffering
+            # # # # # mode 3
+            # buffer = chr(randrange(32, 127)) * buffering
+            # # # # # mode 4 FIXME: 统计字节
+            # for seq in range(min(size, buffering)):
+            #     range_list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]
+            #     shuffle(range_list)
+            #     print(f"{range_list=}")
+            #     for char in range_list:
+            #         buffer += char
+
+            print('填充文件. . .')
+            file.write(buffer)
+            size -= len(buffer)
+        file.close()
+        new_name = join(dirname(i), "RUN_AWAY.txt" +
+                        gettime(no_beauty=True, idiotMode=False,
+                                pf_year=1, pf_month=1, pf_day=1, pf_hour=1, pf_minute=1, pf_second=1))
+        rename(i, new_name)
+        remove(new_name)
+        print('COMPLETE! - %s => %s' % (i, new_name))
+
+
+delete = delete_tree = file_remove
+get_file_path = get_fp
+fp_generator = get_files = generate_file_path = get_fp_generator = get_fp_gen
+get_file_name = get_fname

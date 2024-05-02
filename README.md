@@ -10,7 +10,8 @@
 5. [下一个版本的预告](#_next_version)
 6. [更新日志](#_changelog)
 7. [文件历史记录](#_file_history)
-8. [你知道吗](#_do_you_know)
+8. [其他](#_others)
+9. [你知道吗](#_do_you_know)
 
 -----
 <a id="_summary">概述</id>
@@ -21,9 +22,9 @@
 
 作者: 8388688
 
-version: 4.4
+version: 4.5-pre2
 
-最后修改时间：2023-03-25
+最后修改时间：2024-02-14
 ~~(以此证明我还活着)~~
 
 -----
@@ -37,6 +38,7 @@ version: 4.4
 * python.math
 * python.os
 * python.random
+* python.requests
 * python.stat
 * python.sys
 * python.tkinter
@@ -56,7 +58,7 @@ version: 4.4
 
 -----
 
-- [ ] st-000001. ...
+- [ ] st-000001. 简化 filter_()
 - [ ] st-000002. ...
 - [ ] st-000003. ...
 
@@ -67,9 +69,10 @@ version: 4.4
 
 ## 下一个版本的预告
 
-Release-4.4
+Release-4.5
 
-- 版本自动升级更新
+- 大幅修正代码格式
+- 合并作用相近的函数
 
 -----
 <a id="_changelog">更新日志</id>
@@ -86,13 +89,24 @@ Release-4.4
 ### 保存的历史版本(按照时间顺序排序)
 
 -----
+<a id="_others">其他</id>
+
+[回到顶部](#_menu)
+
+- 函数命名规则
+    - 尾部带有 "_gen" / "_generator" 后缀的 **[函数](https://zh.qikipedia.org/wiki/子程序)** 为生成器（such
+      as `get_fp_gen()`）。
+    - 尾部带有 "_fp"(**f**ile **p**ath) 的变量为存储文件路径的 **变量**（such as `top10file_fp`）。
+    - 尾部带有 "_fiet"(**fi**le **e**n**t**ity) 的变量为存储文件路径的 **变量**（such as `top10file_fiet`）。
+
+-----
 <a id="_do_you_know">你知道吗</id>
 
 [回到顶部](#_menu)
 
 ### 你知道吗
 
-1. 在 1.6x 版本之前，simple_tools 的文件名叫作 \[中文名\]素材大本营，在 2.0 版本之后改为 module1
+1. 在 1.6x 版本之前，simple_tools 的文件名叫作 `[中文名\素材大本营`，在 2.0 版本之后改为 module1
 2. 在 [GitHub](https://github.com/) 上，也有一个同名的
    [simple_tools](https://www.github.com/afriemann/simple_tools.git)，但和这个 simple_tools 之间没有任何关系。
 3. 1.6.6 以前的版本全部损坏，无法读取。

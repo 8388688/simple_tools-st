@@ -1,13 +1,10 @@
 from os import getcwd, getenv, mkdir, system
 from os.path import join
 
-EOF = -1
-null = 0
-NULL = None
 fp = getcwd()
 
 EMPTY_UUID = '00000000-0000-0000-0000-000000000000'
-ST_WORK_SPACE = join(getenv('APPDATA'), 'simple_tools')
+ST_WORK_SPACE = join(str(getenv('APPDATA')), 'simple_tools')
 
 science_tuple = ('', 'K', 'M', 'B', 'T', 'P', 'E', 'Z', 'Y', 'S', 'L', 'X', 'D', 'C', 'H', 'I', 'N', 'A', 'F', 'G',
                  'J', 'O')
@@ -143,7 +140,7 @@ def _md_dir(__file_path, quiet=False):
             pass
 
 
-def pass_(returns=null, *args, **kwargs):
+def pass_(returns=0, *args, **kwargs):
     """没用的函数
 
     @return: returns
@@ -175,6 +172,6 @@ _md_dir(join(ST_WORK_SPACE, 'times'), quiet=QUIET_P)
 
 __all__ = [
     'ST_WORK_SPACE',
-    'usernameList', 'EOF', 'EMPTY_UUID', 'fp', 'NULL', 'null', 'science_tuple', 'tabs',
+    'usernameList', 'EMPTY_UUID', 'fp', 'science_tuple', 'tabs',
     'pass_'
 ]

@@ -54,21 +54,15 @@ def test():
         print(get_time_stamp())
 
     else:
-        print('This is a local function.\n                     ————8388688')
-
-
-def system_of_test():
-    # from system_extend.py
-    for k in generate_file_path(r'C:\Users\taskmgr_agent\AppData\Local\Application Data', True, from_size=1000,
-                                to_size=1000000, suffix='exe'):
-        print(k)
+        print('This is a local function.\n%s————8388688' % " " * 20)
 
 
 def get_suffix():
     # from default.py
-    fp_1 = '..\\'
+    fp_1 = 'L:/2018'
+    # fp_1 = '..\\'
     k = set()
-    for i in generate_file_path(fp_1, False):
+    for i in get_fp_gen(fp_1, False):
         try:
             k.update({i.split('.')[-1]})
         except:
@@ -123,5 +117,7 @@ def normal_encr1():
 
 
 if __name__ == '__main__':
-    # system_of_test()
-    test()
+    # test()
+    get_suffix()
+
+    # safe_delete(r'C:\Users\taskmgr_agent\AppData\Roaming\MeadEyetoe_fileTemp\这么可爱的萝莉，裙子竟然会吃人！.mp4')
