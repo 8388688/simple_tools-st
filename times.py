@@ -1,12 +1,12 @@
 from time import time, localtime, strftime, sleep
 
-__all__ = ['get_time_stamp', 'wait']
+__all__ = ['timestamp', 'wait']
 
 
-def get_time_stamp(v_time=None, busy=False, idiotMode=False, **kwargs) -> str:
+def timestamp(v_time=None, busy=False, idiotMode=False, **kwargs) -> str:
     """获取美化的时间
 
-    \n 在 module1 v3.3 更新的版本上，我们准备了 23,529,242,880 种不同的时间戳格式以及 5 个预设值，打造属于自己的时间戳。
+    \n 在 simple_tools v3.3 更新的版本上，我们准备了 23,529,242,880 种不同的时间戳格式以及 5 个预设值，打造属于自己的时间戳。
     \n 注意: kwargs 中 presets 可选项是一个 int 值:
     \n > 为 0 表示不使用预设值
     \n > 大于 0 时使用预设值的第 (presets - 1) 个值
@@ -19,15 +19,15 @@ def get_time_stamp(v_time=None, busy=False, idiotMode=False, **kwargs) -> str:
     @param kwargs: 高级选项
     @return: 一个字符串
     """
-    prop_seconds = ('', '%S', '%S ', '%SZ', '%S秒', '%S秒 ')
-    prop_minutes = ('', '%M', '%M ', '%M,', '%M-', '%M.', '%M/', '%M:', '%M\\', '%M_', '%M分', '%M分 ')
-    prop_hours = ('', '%H', '%H ', '%H,', '%H-', '%H.', '%H/', '%H:', '%H\\', '%H_', '%H时', '%H时 ',
-                  '%I', '%I ', '%I,', '%I-', '%I.', '%I/', '%I:', '%I\\', '%I_', '%I时', '%I时 ')
-    prop_local_12_hours = ('', ' %p', '%p', '%p ', '%p:', ':%p')
-    prop_days = ('', '%d', '%d ', '%d,', '%d-', '%d.', '%d/', '%d:', '%dT', '%d\\', '%d_', '%d日', '%d日 ')
-    prop_months = ('', '%m', '%m ', '%m,', '%m-', '%m.', '%m/', '%m:', '%m\\', '%m_', '%m月', '%m月 ')
     prop_years = ('', '%Y', '%Y ', '%Y,', '%Y-', '%Y.', '%Y/', '%Y:', '%Y\\', '%Y_', '%Y年', '%Y年 ',
                   '%y', '%y ', '%y,', '%y-', '%y.', '%y/', '%y:', '%y\\', '%y_', '%y年', '%y年 ')
+    prop_months = ('', '%m', '%m ', '%m,', '%m-', '%m.', '%m/', '%m:', '%m\\', '%m_', '%m月', '%m月 ')
+    prop_days = ('', '%d', '%d ', '%d,', '%d-', '%d.', '%d/', '%d:', '%dT', '%d\\', '%d_', '%d日', '%d日 ')
+    prop_hours = ('', '%H', '%H ', '%H,', '%H-', '%H.', '%H/', '%H:', '%H\\', '%H_', '%H时', '%H时 ',
+                  '%I', '%I ', '%I,', '%I-', '%I.', '%I/', '%I:', '%I\\', '%I_', '%I时', '%I时 ')
+    prop_minutes = ('', '%M', '%M ', '%M,', '%M-', '%M.', '%M/', '%M:', '%M\\', '%M_', '%M分', '%M分 ')
+    prop_seconds = ('', '%S', '%S ', '%SZ', '%S秒', '%S秒 ')
+    prop_local_12_hours = ('', ' %p', '%p', '%p ', '%p:', ':%p')
     prop_weeks = ('', ' %A', ' %a', ' %w', '%A', '%A ', '%a', '%a ', '%w', '%w ')
     prop_time_presets = (
         (
@@ -50,6 +50,10 @@ def get_time_stamp(v_time=None, busy=False, idiotMode=False, **kwargs) -> str:
             prop_years[1], prop_months[1], prop_days[8], prop_weeks[0],
             prop_local_12_hours[0], prop_hours[1], prop_minutes[1], prop_seconds[3]
         ),  # 通用 unix 时间, example: "yyyymmddThhmmssZ"
+        (
+            prop_years[4], prop_months[4], prop_days[8], prop_weeks[0],
+            prop_local_12_hours[0], prop_hours[5], prop_minutes[5], prop_seconds[3]
+        ),  # 通用 unix 时间, example: "yyyy-mm-ddThh.mm.ssZ"
     )
 
     properties_format = kwargs
@@ -144,3 +148,6 @@ def wait(seconds=0, busy_loop=None):
     else:
         sleep(seconds)
     return seconds
+
+
+get_time_stamp = time_stamp = timestamp

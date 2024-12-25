@@ -1,8 +1,12 @@
-__all__ = ['binary_search', 'bl_properties', 'generate_bl_properties',
+from simple_tools.data_base import tabs_bl
+from simple_tools.default import deprecated
+
+__all__ = ['binary_search', 'bl_properties_gen', 'generate_bl_properties',
            'dimensional_list', 'filter_', 'list2str',
            'search_to_str_in_list', 'review', "equals_list",
+           "to_bytes_auto", "list2bytes", "bytes2list",
 
-           "bl_properties_test"]
+           "bl_properties", ]
 
 
 def binary_search(list2, item):
@@ -23,59 +27,39 @@ def binary_search(list2, item):
 def bl_properties(*args, **kwargs):
     print(args)
     print(kwargs)
-    print('代码重构...')
+    deprecated(bl_properties, bl_properties_gen)
 
 
-def generate_bl_properties(*args, **kwargs):
-    print(args)
-    print(kwargs)
-    print('代码重构...')
-
-
-prefix = []  # 为 `bl_properties_test` 准备的前置列表
-
-
-def bl_properties_test(seq, title="Sequence", **kwargs):
-    global prefix
+def bl_properties_gen(seq, title: None | str = "\033[0;31m目前暂时无法遍历 dict 和 set 类型\033[0m", digital=False,
+                      __prefix_list=()):
+    prefix = list(__prefix_list)
 
     SEQUENCES_LINE = (list, tuple)
     SEQUENCES_LIST = SEQUENCES_LINE + (dict, set)
 
-    is_a_iterable_condition = kwargs.get("is_a_iterable_condition", lambda x: type(seq[x]) in SEQUENCES_LINE)
-    can_iter_condition = kwargs.get("can_iter_condition", lambda sequ: type(sequ) in SEQUENCES_LIST)
-    particularize_list_action = kwargs.get("particularize_list_action", lambda sequ: range(len(sequ)))
-    is_ended_list = kwargs.get("is_ended_list", lambda index, sequ: index + 1 == len(sequ))
-    return_val_one_by_one = kwargs.get("return_val_one_by_one", lambda si: str(seq[si]))
-    return_title_one_by_one = kwargs.get("return_title_one_by_one", lambda si: str(type(seq[si])))
-    iter_val_one_by_one = kwargs.get("iter_val_one_by_one", lambda si: seq[si])
+    if title is not None:
+        print(title)
 
-    # print(title)
-    if can_iter_condition(seq):
-        for i in particularize_list_action(seq):
-            if is_ended_list(i, seq):
-                prefix_passed = ("└-", "    ")
+    # if type(seq) in SEQUENCES_LIST:
+    if type(seq) in SEQUENCES_LINE:
+        for i in range(len(seq)):
+            if i + 1 == len(seq):
+                prefix_passed = tabs_bl[0]
             else:
-                prefix_passed = ("├-", "│   ")
+                prefix_passed = tabs_bl[1]
 
             # print(i)
-            if is_a_iterable_condition(i):
-                yield list2str(prefix + [prefix_passed[0], ], "") + return_title_one_by_one(i) + '-----'
-                # print(list2str(prefix + [prefix_passed[0], ], ""), type(seq[i]), sep="")
+            yld = list2str(prefix + [prefix_passed[0], ] + [str(i) + ". " if digital else ""], "")
+            if type(seq[i]) in SEQUENCES_LINE:
+                yield yld + str(type(seq[i]))
+                # print(yld, type(seq[i]), sep="")
                 prefix.append(prefix_passed[1])
-                print('------', iter_val_one_by_one(i))
-                for item in bl_properties_test(iter_val_one_by_one(i),
-                                               is_a_iterable_condition=is_a_iterable_condition,
-                                               can_iter_condition=can_iter_condition,
-                                               particularize_list_action=particularize_list_action,
-                                               is_ended_list=is_ended_list,
-                                               return_val_one_by_one=return_val_one_by_one,
-                                               return_title_one_by_one=return_title_one_by_one,
-                                               iter_val_one_by_one=iter_val_one_by_one):
+                for item in bl_properties_gen(seq[i], title=None, digital=digital, __prefix_list=prefix):
                     yield item
                 prefix.pop(-1)
             else:
-                yield list2str(prefix + [prefix_passed[0], ], "") + return_val_one_by_one(i)
-                # print(list2str(prefix + [prefix_passed[0], ], ""), seq[i], sep="")
+                yield yld + str(seq[i])
+                # print(yld, seq[i], sep="")
     else:
         print(seq)
 
@@ -438,63 +422,12 @@ def search_to_str_in_list(input_object=None, testlist=None, **kwargs):
     return output_list
 
 
-def review(value, sep=':', line_sign=0, lines=False, all_values=True, deep=0, decorate=True, dict_sign=':'):
-    """review是检视的意思，它的作用等价于bl
-
-    line_sign 和 decorate 互相冲突，line_sign 的优先级高于 decorate
-    检视优先级中，dictionary 的优先级为 1，list，tuple，set，str 的优先级为 2，其他类型的优先级为 3
-
-    :param line_sign: 加行号标志
-    :param value: 判断输入的是什么类型
-    :param sep: 第n项和第n+1项之间的分隔符
-    :param lines: 空行，默认为 False
-    :param all_values: 全部遍历
-    :param deep: 递归深度，不要更改这个参数
-    :param decorate: 装饰
-    :param dict_sign: 字典分隔符
-    :return: void
-    """
-
-    count = cache_count = 0
-    deeps = deep
-    if type(value) is dict:
-        if lines:
-            print()
-        for a000 in value:
-            if type(a000) is list or type(a000) is tuple or type(a000) is set or type(a000) is dict:
-                review(a000, sep=sep, line_sign=line_sign, lines=lines, all_values=all_values, deep=deep + 1,
-                       decorate=decorate)
-            elif line_sign:
-                count += 1
-                print(str(count) + sep + str(a000) + dict_sign + str(value[a000]))
-            elif decorate:
-                if a000 == value[-1]:
-                    print('├ ' * (deeps - 1) + '└ ', str(a000) + dict_sign + str(value[a000]), sep='')
-                else:
-                    print('├ ' * deeps, str(a000) + dict_sign + str(value[a000]), sep='')
-            else:
-                print(str(a000) + dict_sign + str(value[a000]))
-    elif type(value) is str or type(value) is list or type(value) is tuple or type(value) is set:
-        if lines:
-            print()
-        for a000 in value:
-            if type(a000) is list or type(a000) is tuple or type(a000) is set or type(a000) is dict:
-                review(a000, sep=sep, line_sign=line_sign, lines=lines, all_values=all_values, deep=deep + 1,
-                       decorate=decorate)
-            elif line_sign:
-                count += 1
-                print(count, sep, str(a000), sep='')
-            elif decorate:
-                if a000 == value[-1]:
-                    print('├ ' * (deeps - 1) + '└ ', a000, sep='')
-                else:
-                    print('├ ' * deeps, a000, sep='')
-            else:
-                print(a000)
-    else:
-        print('输入类型不正确')
-        return 1
-    del cache_count
+def review(value, *args, **kwargs):
+    deprecated(review, bl_properties_gen)
+    print(args)
+    print(kwargs)
+    for i in bl_properties_gen(value):
+        print(i)
 
 
 def equals_list(*args: list | set | tuple):
@@ -513,3 +446,45 @@ def equals_list(*args: list | set | tuple):
             if i_ch:
                 k_equ = False
     return k_equ
+
+
+def to_bytes_auto(code: int):
+    RATE = 256  # 不可随意修改，因为 \xff 最多表示 0 - 255 这 256 个数码
+    i = 0
+    while code // (RATE ** i) != 0:
+        i += 1
+    return code.to_bytes(i)
+
+
+def list2bytes(seq: list):
+    bytes_ret = b""
+    for i in seq:
+        bytes_ret += to_bytes_auto(i)
+
+    return bytes_ret
+
+
+def bytes2list(context: bytes, coding="utf-8", chunks=1):
+    """虽然名为 bytes2list 但也兼具 str2list 的功能
+
+    @param context:
+    @param coding:
+    @param chunks:
+    @return:
+    """
+    text_list = []
+    for ch in range(0, len(context), chunks):
+        i = context[ch: ch + chunks]
+        if type(i) is str:
+            print("\033[0;30m尽量避免使用 str 类型，推荐 bytes 类型\033[0m;")
+            text_list.append(int.from_bytes(bytes=i.encode(coding)))
+        elif type(i) is int:
+            text_list.append(i)
+        elif type(i) is bytes:
+            text_list.append(int.from_bytes(bytes=i))
+            # print("skip:", i)
+    # print("转列表:", text_list)
+    return text_list
+
+
+generate_bl_properties = bl_properties_gen

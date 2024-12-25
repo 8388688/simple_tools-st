@@ -36,14 +36,53 @@
 [__init__]: __init__.py
 
 * 4.x
+    * 4.7 更新 \[**简并更新**\]:
+        * 4.7-pre1 \[2024-10-04-20-15-07\]
+            * 移除 [system_extend][system_extend] 中的 `File` 类
+            * 优化 `fp_gen()` 函数
+    * 4.6 更新 \[**简并更新**\]:
+        * 4.6 Release \[2024-07-15-17-27-57\] \(version_code: 20240715001\)
+            * Updated: `get_fname()` 添加 `expert_mode` 参数，此参数控制输出方式（简单模式/专家模式），默认为 False（简单模式）。
+            * Updated: `fp_gen()` 添加“专家模式”输出方式 `abspath=-1`。
+            * Renamed: `file_remove() -> del_tree()`
+            * Modified: 删除 `safe_md()` 的文件日志记录相关的代码。
+            * Deleted: 清空 `normal_encryption_with_bytes(), absolute_encryption(), file_encryption()` 三个函数的功能。
+            * Fixed: 修复 `prime_range_gen()` 无法显示质数 2 的 bug。
+        * 4.6-beta2 \[2024-06-27-22-44-32\] \(version_code: 20240627001\)
+            * Modified: `scientific_notate()` 添加自定义列表
+            * Fixed: 修复 `get_fname()` 没有添加进 [system_extend.\_\_all\_\_][system_extend] 的 bug
+        * 4.6-beta1 \[2024-06-23-22-33-25\] \(version_code: 20240623001\)
+            * Fixed: 修正若干拼写错误的变量名
+            * Added: 添加 `gcd()` 函数
+            * Deleted: 删除 `euclidean_algorithm()` 函数
+            * Modified: 优化 import 语句，将所有的 `import ...` 全部改为 `from ... import ...`
+            * Modified: 删除 [README.md][README] 中的版本提示
+        * 4.6-pre2 \[2024-06-09-16-00-00\] \(version_code: 20240609001\)
+            * Fixed: check_and_install_package 传入的第三方库已被安装时，无论 import_ 参数是否被设置为 True，都无法导入相关的库。
+            * Fixed: 准备移除旧版本的 random_choice() 函数
+            * Added: 加入新 random_choice() 函数（等概率随机抽取）
+            * Modified: 加入 scientific_notate() 函数以替代 convert_system() 函数
+            * Updated: 更新 [README.md][README]，删除“依赖的插件”中一些实际上并没有导入的包。
+            * Modified: rename:
+                * `get_time_stamp() -> timestamp()`
+                * `get_fp_gen() -> fp_gen()`
+                * `get_file_suffix() -> file_suffix()`
+        * 4.6-pre1 \[2024-05-02-11-30-44\] \(version_code: 20240502001\)
+            * Added: 添加 `tree_fp_gen()` 函数。
+            * Fixed: 修正 `generate_prime_range()` 函数。
+            * Updated: `decomposition()` display changed from 已完成 to 总进度。
+            * Modified: 将 `generate_bl_properties`, `bl_properties` `bl_properties_test` 合并为 `bl_properties_gen`.
+            * Fixed: 移除 `bl_properties_gen()` 对前置列表的依赖。
+            * Deleted: 移除 `get_suffix` in [example][example].
+            * Deleted: 清空 `review` 函数。
     * 4.5 更新: [程序规范化更新][__init__]
         * 4.5 Release \[2024-05-01-20-48-52\] \(version_code: 20240501001\)
             * Updated: Remove params 及其引用:
-            * ```python
-              NULL = None
-              EOF = -1
-              null = 0
-              ```
+          ```python
+          NULL = None
+          EOF = -1
+          null = 0
+          ```
             * Deleted: [README][README] 文件中的部分死链接
             * Updated: [README][README] 文件格式
             * Updated: get_fp_gen() 三种输出模式：absolute path, filename, 相对内容根的路径。

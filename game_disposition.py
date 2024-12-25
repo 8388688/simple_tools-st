@@ -4,7 +4,7 @@ from os.path import join
 
 from simple_tools.data_base import usernameList, EMPTY_UUID
 from simple_tools.hash import get_md5, uuid_generator
-from simple_tools.system_extend import file_remove, safe_md
+from simple_tools.system_extend import del_tree, safe_md
 
 __all__ = ['Person', 'Users']
 
@@ -110,8 +110,7 @@ class Users:
             print('删除', self.name, '的信息')
             if self.name in Users.UserNameList and self.name != Users.TEMP_USER_NAME:
                 Users.UserNameList.remove(self.name)
-                file_remove(join(Users.USER_WORK_SPACE, self.name),
-                            all_files=True, all_folders=True, forces=True)
+                del_tree(join(Users.USER_WORK_SPACE, self.name), all_files=True, all_folders=True, forces=True)
             else:
                 print('试图删除 %s 用户时出现错误' % self.name)
                 return

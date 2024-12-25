@@ -1,6 +1,6 @@
-import random
+from random import randrange, choice, randint, random
 
-__all__ = ['create_random_list', 'random_choice', 'random_pop']
+__all__ = ['create_random_list', 'random_choice_old', "random_pop", "random_choice"]
 
 
 def create_random_list(start_=0, end_=10, step_=1, values=None, returns=True):
@@ -26,7 +26,7 @@ def create_random_list(start_=0, end_=10, step_=1, values=None, returns=True):
         lists = values
     for a000 in range(len(lists)):
         # 生成随机数列
-        random1 = random.randrange(0, len(lists), 1)  # 随机生成一个lists的下标
+        random1 = randrange(0, len(lists), 1)  # 随机生成一个lists的下标
         list1.append(lists.pop(random1))
     if returns:
         return list1  # 返回 list1，以列表的格式
@@ -35,11 +35,29 @@ def create_random_list(start_=0, end_=10, step_=1, values=None, returns=True):
         return 0
 
 
-def random_choice():
-    return random.choice([True, False])
+def random_choice_old():
+    return choice([True, False])
+
+
+def random_choice(seq, permission):
+    print(f"\033[0;31m要访问旧版本的 random_choice 函数，请调用 {random_choice_old.__name__}()\033[0m")
+    rd_choice = random()
+    pg = permission
+    sum_ = 0
+    pg_new = []
+    for i in pg:
+        pg_new.append(sum_)
+        sum_ += i
+    pg_new = list(map(lambda x: x / sum_, pg_new))
+    for i in range(len(pg_new) - 1, -1, -1):
+        if pg_new[i] <= rd_choice:
+            # print(rd_choice, "=>", g[i])
+            # print(i, "=>", dg[i])
+            # break
+            return seq[i]
 
 
 def random_pop(*args, filters=None):
     base_value = list(args)
     for a000 in range(0, len(base_value), 1):
-        yield base_value.pop(random.randint(0, len(base_value) - 1))
+        yield base_value.pop(randint(0, len(base_value) - 1))

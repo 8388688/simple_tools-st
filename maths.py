@@ -1,19 +1,21 @@
-import math
-import time
+from math import sqrt, ceil
 from os.path import join
+from time import time
 
+from simple_tools.data_base import ST_WORK_SPACE
 from simple_tools.data_base import science_tuple, pass_
 from simple_tools.data_process import filter_
+from simple_tools.default import deprecated, invoke
 from simple_tools.system_extend import safe_md
-from simple_tools.data_base import ST_WORK_SPACE
 
 __all__ = [
     'add1', 'average_generator', 'convert_system', 'is_prime',
     'dec_to_r_convert', 'decomposition', 'decomposition_gui',
-    'divisionAlgorithm', 'euclidean_algorithm',
     'get_prime_range', 'generate_prime_range',
+    "prime_range_gen",
     'r_to_dec_convert', 'saving_decomposition',
     'r2dec_convert', 'dec2r_convert',
+    "scientific_notate", "gcd", "gcd_legacy"
 ]
 
 LOCAL_WORK_SPACE = join(ST_WORK_SPACE, 'maths')
@@ -34,48 +36,28 @@ def average_generator(*args):
         del c
 
 
-def convert_system(value1, cm1='', cm2='', cm3='', returns=False, error_tips_='你输入的数字太大了！', precision=None):
-    """转换系统
+def convert_system(*args, **kwargs):
+    print(args)
+    print(kwargs)
+    deprecated(convert_system, scientific_notate)
 
-    将一个数以 KM…… 的形式输出
 
-    :param value1: 输入的大数
-    :param cm1: 文本1
-    :param cm2: 文本2
-    :param cm3: 文本3
-    :param returns: 默认为False，True时直接忽略cm1, cm2, cm3三个参数，True时返回转换后的值和原来的值，不打印结果，False时只返回转换后的值，打印结果。
-    :param error_tips_: 错误提示
-    :param precision: 输出精度，例：10表示精确到十位，0.01表示精确到百分位，默认为None，（None表示无损输出）
-    :return: 转换后的数（以str的形式输出）
+def scientific_notate(figure: int | float, rate=1000, keep_decimal_digit=3, custom_seq=science_tuple) -> str:
+    """转换成科学计数法
+
+    @param figure: 输入的整数
+    @param rate: 进率，默认为 1000
+    @param keep_decimal_digit: 这个参数指定了保留几位小数，默认为三位小数
+    @param custom_seq: 自定义表头
+    @return: str(example: 114514 -> 114.514K)
     """
-    re_obj = obj = value1
     count = 0
-    pre = 0
-    if precision is not None:
-        pre = 1 / precision
-    while (obj >= 1000 or obj <= -1000) and obj != 0 and obj != 1:
-        if 1000 > obj > -1000:
-            break
-        elif obj > 1e66 or obj < -1e66:
-            print(error_tips_)
-            break
-        obj /= 1000
+    express = figure
+    while express >= rate:
         count += 1
-    if obj != 0:
-        if obj // 1 == re_obj:
-            if precision is not None:
-                obj = obj * pre // 1 / pre
-            if not returns:
-                print(cm1, '=', obj, science_tuple[count], sep='')
-        else:
-            if precision is not None:
-                obj = obj * pre // 1 / pre
-            if not returns:
-                print(cm3, '\n', cm1, obj, science_tuple[count], cm2, '\n', sep='')
-    if returns:
-        return str(obj) + science_tuple[count], re_obj
-    else:
-        return str(obj) + science_tuple[count]
+        express = figure / (rate ** count)
+    express = express * 10 ** keep_decimal_digit // 1 / 10 ** keep_decimal_digit
+    return str(express) + custom_seq[count]
 
 
 def is_prime(n=None):
@@ -84,7 +66,7 @@ def is_prime(n=None):
         n = filter_(input('>>>'), ('unsigned', 'f_dec', 'int'))
     else:
         n = filter_(n, ('unsigned', 'f_dec', 'int'))
-    for a000 in range(2, math.ceil(math.sqrt(n + 1)), 1):
+    for a000 in range(2, ceil(sqrt(n + 1)), 1):
         if n % a000 == 0:
             key_ = False
             break
@@ -108,7 +90,7 @@ def decomposition_gui(int1=None, tip1='输入一个整数', record=True):
         else:
             a = int1
 
-    print(f'\033[0;36m{decomposition_gui.__name__} 使用的是 {decomposition.__name__} 的 API。\033[0m')
+    invoke(decomposition_gui, decomposition)
     obj_list = decomposition(a)
     if record:
         file_name = join(ST_WORK_SPACE, 'primeNumber.s8l')
@@ -137,8 +119,8 @@ def decomposition(frequently, **kwargs):
     :param kwargs: 可选项
     :return:
     """
-    frequently_var, start_time, i, decomposition_list = abs(frequently), time.time(), 1, []
-    max_safe_time, quiet, safe_tip = kwargs.get('max_safe_time', None), kwargs.get('quiet', None), kwargs.get(
+    frequently_var, start_time, i, decomposition_list = abs(frequently), time(), 1, []
+    max_safe_time, quiet, safe_tip = kwargs.get('max_safe_time', -1), kwargs.get('quiet', None), kwargs.get(
         'safe_tip', '\033[0;31m启动安全锁\033[0m')
     while i * i <= frequently_var:
         i += 1
@@ -147,13 +129,13 @@ def decomposition(frequently, **kwargs):
             decomposition_list.append(i)
         if not quiet:
             print(
-                f'正在计算第{len(decomposition_list) + 1}个质因数, 已完成'
-                f'{round(i / math.sqrt(frequently_var) * 10000) / 100 if i / math.sqrt(frequently_var) <= 1 else 100}%')
-        if max_safe_time is not None and time.time() - start_time > max_safe_time:
+                f'正在计算第{len(decomposition_list) + 1}个质因数, 总进度'
+                f'{round(i / sqrt(frequently_var) * 10000) / 100 if i / sqrt(frequently_var) <= 1 else 100}%')
+        if 0 <= max_safe_time < time() - start_time:
             print(safe_tip) if not quiet else pass_
             break
     else:
-        used_time = time.time() - start_time
+        used_time = time() - start_time
         print(f'用时{used_time}秒\n' if not quiet else '', end='')
 
     decomposition_list.append(frequently_var)
@@ -163,49 +145,25 @@ def decomposition(frequently, **kwargs):
     return decomposition_list
 
 
-def euclidean_algorithm(value1, value2, print_=True, p_print=False):
-    a = value1
-    b = value2
-    # count = 0
-    # while a != b:
-    #     count += 1
-    #     if a > b:
-    #         a -= b
-    #         a = float('%.10f' % a)
-    #         b = float('%.10f' % b)
-    #         if p_print:
-    #             print(count, ')\t', a, '\t', b, sep='')
-    #     elif b > a:
-    #         b -= a
-    #         a = float('%.10f' % a)
-    #         b = float('%.10f' % b)
-    #         if p_print:
-    #             print(count, ')\t', a, '\t', b, sep='')
-    #     if count % 100 == 0:
-    #         input('请按Enter键继续......')
-    # if print_:
-    #     print(a)
-    # return a
+def gcd_legacy(a, b):
+    """gcd 递归版 - 已弃用
 
-    while a != 0 and b != 0:
-        if a > b:
-            a %= b
-            if p_print:
-                print(a, b, sep='\t')
-        elif b > a:
-            b %= a
-            if p_print:
-                print(a, b, sep='\t')
-        else:
-            break
-    if a == 0:
-        if print_:
-            print(b)
+    @param a:
+    @param b:
+    @return:
+    """
+    if b == 0:
         return a
     else:
-        if print_:
-            print(a)
-        return b
+        return gcd_legacy(b, a % b)
+
+
+def gcd(a, b):
+    while b != 0:
+        r = a % b
+        a = b
+        b = r
+    return a
 
 
 def add1(*args):
@@ -250,10 +208,11 @@ def add1(*args):
 
 
 def get_prime_range(start=2, end=100, step=1):  # 埃拉托斯特尼筛法 - 改进版
+    print(f"\033[0;36m{prime_range_gen.__name__} 效率更高\033[0m")
     DELETED_CODE = -2  # -2 表示将要被删除的
     prime_list = list(range(2, end, 1))
     # prime_list = list(range(start, end, step))
-    lim_max = math.sqrt(end)
+    lim_max = sqrt(end)
     start_n = -1
     while start_n <= lim_max:
         start_n += 1
@@ -273,34 +232,32 @@ def get_prime_range(start=2, end=100, step=1):  # 埃拉托斯特尼筛法 - 改
     return final_prime_list
 
 
-def generate_prime_range(start=2, end=100, step=1):
+def prime_range_gen(start=2, end=100, step=1):
     """用生成器获取 start - end 区间的质数
-
-    一个 bug: 当调用 `generate_prime_range(start=10, end=100, step=1)` 时会返回 10 - 100 区间所有不能被 10 整除的数.
-    是由于 prime_list 会默认传入的第一个参数是质数, 导致后面的计算全部出错(解决方法: 禁止用户修改 start 参数[滑稽]).
 
     @param start: 起始值(包括)
     @param end: 结束值(不包括)
     @param step: 步长值
     @return: 计算出的质数列表
     """
-    print(f'\033[1;31m{generate_prime_range.__name__} is probably including many bugs.\033[0m')
     prime_list = []
-    for x in range(start, end, step):
-        x_sqrt = math.sqrt(x)
-        for prime in prime_list:
-            if x % prime == 0:
+    ur_list = list(range(start, end, step))
+    MINIMUM_PRIME = 2
+    prime_list.append(MINIMUM_PRIME)
+
+    for x in range(MINIMUM_PRIME, max(start, end)):
+        x_sqrt = sqrt(x)
+        for i in prime_list:
+            if x % i == 0 and x != MINIMUM_PRIME:
                 break
-            if prime > x_sqrt:
+            if i >= x_sqrt:
                 prime_list.append(x)
-                yield x
+                if x in ur_list:
+                    yield x
                 break
-        else:
-            prime_list.append(x)
-            yield x
 
 
-def r_to_dec_convert(values, r):  # R:无符号十进制整型数
+def r_to_dec_convert(values, r):  # R: 无符号十进制整型数
     """进制转换
 
     :param values:
@@ -361,7 +318,7 @@ def dec_to_r_convert(val, r, **kwargs):
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
     charset = kwargs.get('charset', DEFAULT_DIGITAL_CHARSET_PREPARED)
 
-    if r < len(charset):
+    if r <= len(charset):
         charset = tuple(charset[0: r])
     else:
         print("参数 r 错误!")
@@ -390,6 +347,7 @@ def dec2r_convert(fig, r, figure_type="auto"):
     @param figure_type:
     @return:
     """
+    deprecated(dec2r_convert, dec_to_r_convert)
     DIGITAL_CHARSET_PREPARED = (
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
@@ -415,8 +373,8 @@ def dec2r_convert(fig, r, figure_type="auto"):
 
 
 saving_decomposition = decomposition
-divisionAlgorithm = euclidean_algorithm
 r2dec_convert = r_to_dec_convert
 # dec2r_convert = dec_to_r_convert
+generate_prime_range = prime_range_gen
 
 # get_prime_range = lambda start, end, step: list(generate_prime_range(start=start, end=end, step=step))

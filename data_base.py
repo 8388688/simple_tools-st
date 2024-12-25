@@ -9,6 +9,8 @@ ST_WORK_SPACE = join(str(getenv('APPDATA')), 'simple_tools')
 science_tuple = ('', 'K', 'M', 'B', 'T', 'P', 'E', 'Z', 'Y', 'S', 'L', 'X', 'D', 'C', 'H', 'I', 'N', 'A', 'F', 'G',
                  'J', 'O')
 
+tabs_bl = (("└─", "   "), ("├─", "│  "))
+
 tabs = (('┌', '┬', '┐', '├', '┼', '┤', '└', '┴', '┘',),
         ('╔', '╦', '╗', '╠', '╬', '╣', '╚', '╩', '╝',),
         ('┏', '┳', '┓', '┣', '╋', '┫', '┗', '┻', '┛',),
@@ -172,6 +174,6 @@ _md_dir(join(ST_WORK_SPACE, 'times'), quiet=QUIET_P)
 
 __all__ = [
     'ST_WORK_SPACE',
-    'usernameList', 'EMPTY_UUID', 'fp', 'science_tuple', 'tabs',
+    'usernameList', 'EMPTY_UUID', 'fp', 'science_tuple', 'tabs', "tabs_bl",
     'pass_'
 ]
